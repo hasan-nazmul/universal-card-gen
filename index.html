@@ -1,0 +1,2216 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বঙ্গ সমাচার — News Card Studio</title>
+    <meta name="description" content="Professional news card generator for Facebook-ready Bangladeshi news graphics. Create stunning visual cards instantly.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Serif+Bengali:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        /* ═══════════════════════════════════════════════
+           1. RESET & ROOT VARIABLES
+           ═══════════════════════════════════════════════ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --sidebar-width: 400px;
+            --sidebar-bg: #0a0a10;
+            --sidebar-surface: rgba(255, 255, 255, 0.035);
+            --sidebar-border: rgba(255, 255, 255, 0.07);
+            --main-bg: #111118;
+            --surface: #1a1a24;
+            --text-primary: #e8e8ed;
+            --text-secondary: #7a7a92;
+            --text-muted: #50506a;
+            --accent: #DC2626;
+            --accent-glow: rgba(220, 38, 38, 0.25);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.5);
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Inter', 'Hind Siliguri', sans-serif;
+            background: var(--main-bg);
+            color: var(--text-primary);
+            display: flex;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ═══════════════════════════════════════════════
+           2. CUSTOM SCROLLBAR
+           ═══════════════════════════════════════════════ */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+        /* ═══════════════════════════════════════════════
+           3. SIDEBAR LAYOUT
+           ═══════════════════════════════════════════════ */
+        #sidebar {
+            width: var(--sidebar-width);
+            min-width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--sidebar-border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+        }
+
+        .sidebar-header {
+            padding: 24px 28px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid var(--sidebar-border);
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            object-fit: cover;
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.2);
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-brand h1 {
+            font-family: 'Hind Siliguri', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .sidebar-brand p {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .sidebar-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px 24px;
+        }
+
+        /* ─── Section Groups ─── */
+        .editor-section {
+            margin-bottom: 24px;
+        }
+
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 10px;
+        }
+
+        .section-label .icon {
+            font-size: 14px;
+        }
+
+        /* ─── Text Inputs ─── */
+        #headlineInput, #newsTextarea {
+            width: 100%;
+            background: var(--sidebar-surface);
+            border: 1px solid var(--sidebar-border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            color: var(--text-primary);
+            font-family: 'Hind Siliguri', 'Inter', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            resize: vertical;
+            transition: border-color var(--transition), box-shadow var(--transition);
+            outline: none;
+        }
+
+        #headlineInput {
+            min-height: 50px;
+            max-height: 120px;
+            font-weight: 600;
+            font-size: 17px;
+            margin-bottom: 12px;
+        }
+
+        #newsTextarea {
+            min-height: 160px;
+            max-height: 320px;
+        }
+
+        #headlineInput:focus, #newsTextarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        #headlineInput::placeholder, #newsTextarea::placeholder {
+            color: var(--text-muted);
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+
+        .char-count {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 6px;
+        }
+
+        .format-hint {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            line-height: 1.6;
+        }
+
+        .format-hint code {
+            background: rgba(255,255,255,0.07);
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 10px;
+        }
+
+        .input-sub-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        /* ─── Image Upload ─── */
+        .upload-zone {
+            border: 2px dashed var(--sidebar-border);
+            border-radius: var(--radius-md);
+            padding: 24px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--accent);
+            background: rgba(220, 38, 38, 0.05);
+        }
+
+        .upload-zone.has-image {
+            padding: 0;
+            border-style: solid;
+            border-color: rgba(255,255,255,0.12);
+        }
+
+        .upload-zone .upload-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .upload-zone .upload-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .upload-zone .upload-text span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .upload-preview-img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            display: block;
+            border-radius: var(--radius-md);
+        }
+
+        .upload-remove {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 28px;
+            height: 28px;
+            background: rgba(0,0,0,0.7);
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background var(--transition);
+        }
+
+        .upload-remove:hover {
+            background: #DC2626;
+        }
+
+        #bgFileInput, #logoFileInput {
+            display: none;
+        }
+
+        /* ─── Color Palette ─── */
+        .color-palette {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .color-swatch {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all var(--transition);
+            position: relative;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.15);
+        }
+
+        .color-swatch.active {
+            border-color: #fff;
+            box-shadow: 0 0 12px var(--accent-glow);
+            transform: scale(1.1);
+        }
+
+        .color-swatch.active::after {
+            content: '✓';
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .color-custom-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .color-custom-input {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            padding: 0;
+            background: none;
+            -webkit-appearance: none;
+        }
+
+        .color-custom-input::-webkit-color-swatch-wrapper { padding: 0; }
+        .color-custom-input::-webkit-color-swatch {
+            border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 50%;
+        }
+
+        .color-custom-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* ─── Brand Input ─── */
+        .brand-input {
+            width: 100%;
+            background: var(--sidebar-surface);
+            border: 1px solid var(--sidebar-border);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            color: var(--text-primary);
+            font-family: 'Hind Siliguri', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color var(--transition);
+        }
+
+        .brand-input:focus {
+            border-color: var(--accent);
+        }
+
+        /* ─── Buttons ─── */
+        .sidebar-actions {
+            padding: 16px 24px 24px;
+            border-top: 1px solid var(--sidebar-border);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-generate {
+            width: 100%;
+            padding: 14px 20px;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: 'Inter', 'Hind Siliguri', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            transition: all var(--transition);
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--accent), #b91c1c);
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 25px var(--accent-glow);
+        }
+
+        .btn-generate:active {
+            transform: translateY(0);
+        }
+
+        .btn-generate.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .btn-download-all {
+            width: 100%;
+            padding: 12px 20px;
+            border: 1px solid var(--sidebar-border);
+            border-radius: var(--radius-md);
+            background: var(--sidebar-surface);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .btn-download-all:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+            background: rgba(220, 38, 38, 0.08);
+        }
+
+        /* ═══════════════════════════════════════════════
+           4. MAIN GALLERY AREA
+           ═══════════════════════════════════════════════ */
+        #mainArea {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-header {
+            padding: 24px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            flex-shrink: 0;
+        }
+
+        .main-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .card-count-badge {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent);
+            background: rgba(220, 38, 38, 0.12);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: none;
+        }
+
+        .card-count-badge.visible { display: inline-block; }
+
+        /* ─── Empty State ─── */
+        .empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .empty-state h2 {
+            font-family: 'Hind Siliguri', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .empty-state p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 440px;
+        }
+
+        .workflow-steps {
+            display: flex;
+            gap: 16px;
+            margin-top: 36px;
+        }
+
+        .workflow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 20px 18px;
+            background: var(--sidebar-surface);
+            border: 1px solid var(--sidebar-border);
+            border-radius: var(--radius-md);
+            min-width: 100px;
+            transition: all var(--transition);
+        }
+
+        .workflow-step:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .workflow-step .step-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #b91c1c);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .workflow-step .step-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* ─── Gallery Grid ─── */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 28px;
+            padding: 32px 36px 48px;
+        }
+
+        .gallery-card {
+            animation: cardAppear 0.5s ease both;
+        }
+
+        .card-preview {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: transform var(--transition), box-shadow var(--transition);
+            background: #000;
+        }
+
+        .card-preview:hover {
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-scale-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+        }
+
+        .card-scale-wrapper .card-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1200px;
+            height: 1200px;
+            transform-origin: top left;
+        }
+
+        .card-hover-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.55);
+            opacity: 0;
+            transition: opacity var(--transition);
+            backdrop-filter: blur(2px);
+        }
+
+        .card-preview:hover .card-hover-overlay {
+            opacity: 1;
+        }
+
+        .preview-action-btn {
+            padding: 10px 24px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 30px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 4px 4px;
+        }
+
+        .meta-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .template-icon { font-size: 16px; }
+
+        .template-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .meta-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ─── Per-card image toggle ─── */
+        .img-toggle {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            font-size: 11px;
+            color: var(--text-muted);
+            user-select: none;
+        }
+
+        .img-toggle input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .btn-download-single {
+            padding: 6px 14px;
+            border: 1px solid var(--sidebar-border);
+            border-radius: 20px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-download-single:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(220, 38, 38, 0.08);
+        }
+
+        /* ═══════════════════════════════════════════════
+           5. PREVIEW MODAL
+           ═══════════════════════════════════════════════ */
+        .modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+        }
+
+        .modal-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -10px;
+            right: -50px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition);
+        }
+
+        .modal-close:hover {
+            background: #DC2626;
+            border-color: #DC2626;
+        }
+
+        .modal-card-wrapper {
+            width: 600px;
+            height: 600px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            position: relative;
+        }
+
+        .modal-card-wrapper .card-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1200px;
+            height: 1200px;
+            transform: scale(0.5);
+            transform-origin: top left;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-modal-download {
+            padding: 12px 32px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(135deg, var(--accent), #b91c1c);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition);
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .btn-modal-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px var(--accent-glow);
+        }
+
+        /* ═══════════════════════════════════════════════
+           6. TOAST NOTIFICATIONS
+           ═══════════════════════════════════════════════ */
+        .toast-container {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 14px 22px;
+            border-radius: var(--radius-md);
+            background: #1e1e2e;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            animation: toastIn 0.4s ease, toastOut 0.4s ease 2.6s both;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 360px;
+            backdrop-filter: blur(20px);
+        }
+
+        .toast.success { border-left: 3px solid #22c55e; }
+        .toast.error { border-left: 3px solid #ef4444; }
+        .toast.warning { border-left: 3px solid #f59e0b; }
+        .toast.info { border-left: 3px solid #3b82f6; }
+
+        /* ═══════════════════════════════════════════════
+           7. ANIMATIONS
+           ═══════════════════════════════════════════════ */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(24px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(40px); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        /* ═══════════════════════════════════════════════
+           8. CARD TEMPLATE SHARED STYLES
+           ═══════════════════════════════════════════════ */
+        .card-canvas {
+            font-family: 'Hind Siliguri', 'Inter', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-canvas * {
+            box-sizing: border-box;
+        }
+
+        /* ─── Enhanced Footer (shared structure) ─── */
+        .card-footer-bar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 30px 60px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .card-footer-bar .fl-logo {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 2.5px solid rgba(255,255,255,0.15);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+        }
+
+        .card-footer-bar .fl-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .card-footer-bar .fl-brand {
+            font-family: 'Hind Siliguri', sans-serif;
+            font-weight: 700;
+            font-size: 26px;
+            line-height: 1.2;
+        }
+
+        .card-footer-bar .fl-motto {
+            font-family: 'Hind Siliguri', sans-serif;
+            font-weight: 400;
+            font-size: 17px;
+            line-height: 1.3;
+        }
+
+        .card-footer-bar .fl-divider {
+            position: absolute;
+            top: 0;
+            left: 60px;
+            right: 60px;
+            height: 1px;
+        }
+
+        /* Footer color variants */
+        .footer-on-dark .fl-logo { border-color: rgba(255,255,255,0.2); }
+        .footer-on-dark .fl-brand { color: #ffffff; }
+        .footer-on-dark .fl-motto { color: rgba(255,255,255,0.55); }
+        .footer-on-dark .fl-divider { background: rgba(255,255,255,0.12); }
+
+        .footer-on-light .fl-logo { border-color: rgba(0,0,0,0.08); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .footer-on-light .fl-brand { color: #1a1a2e; }
+        .footer-on-light .fl-motto { color: rgba(26,26,46,0.5); }
+        .footer-on-light .fl-divider { background: rgba(0,0,0,0.08); }
+
+        .footer-on-accent .fl-logo { border-color: rgba(255,255,255,0.25); }
+        .footer-on-accent .fl-brand { color: #ffffff; }
+        .footer-on-accent .fl-motto { color: rgba(255,255,255,0.65); }
+        .footer-on-accent .fl-divider { background: rgba(255,255,255,0.2); }
+
+        /* ─── Content area shared ─── */
+        .card-content-area p {
+            margin: 0 0 14px 0;
+        }
+
+        .card-content-area p:last-child {
+            margin-bottom: 0;
+        }
+
+        .card-content-area ul, .card-content-area ol {
+            margin: 0 0 14px 0;
+            padding-left: 30px;
+        }
+
+        .card-content-area li {
+            margin-bottom: 8px;
+        }
+
+        .card-content-area .spacer {
+            height: 10px;
+        }
+
+        .card-content-area strong {
+            font-weight: 700;
+        }
+
+        .card-content-area em {
+            font-style: italic;
+        }
+
+        /* ─── Text length classes ─── */
+        .text-short .card-content-area { font-size: 40px; }
+        .text-medium .card-content-area { font-size: 34px; }
+        .text-long .card-content-area { font-size: 28px; }
+        .text-xlong .card-content-area { font-size: 23px; }
+
+        /* ═══════════════════════════════════════════════
+           9. CAPTURE ZONE (off-screen for html2canvas)
+           ═══════════════════════════════════════════════ */
+        #captureZone {
+            position: fixed;
+            left: -9999px;
+            top: 0;
+            width: 1200px;
+            height: 1200px;
+            overflow: visible;
+            z-index: -1;
+        }
+
+        /* ═══════════════════════════════════════════════
+           10. RESPONSIVE
+           ═══════════════════════════════════════════════ */
+        @media (max-width: 1100px) {
+            :root { --sidebar-width: 340px; }
+            .gallery-grid { padding: 24px; gap: 20px; }
+        }
+
+        @media (max-width: 860px) {
+            body { flex-direction: column; }
+            #sidebar {
+                width: 100%;
+                min-width: unset;
+                height: auto;
+                max-height: 50vh;
+                border-right: none;
+                border-bottom: 1px solid var(--sidebar-border);
+            }
+            #mainArea { height: 50vh; }
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+            .modal-card-wrapper { width: 90vw; height: 90vw; max-width: 500px; max-height: 500px; }
+            .modal-card-wrapper .card-canvas {
+                transform: scale(calc(min(90vw, 500px) / 1200));
+            }
+            .modal-close { top: -45px; right: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══════════════════════════════════════════════
+         SIDEBAR EDITOR
+         ═══════════════════════════════════════════════ -->
+    <aside id="sidebar">
+        <div class="sidebar-header">
+            <img id="sidebarLogo" src="./bongo-shomachar.jpeg" class="sidebar-logo" alt="বঙ্গ সমাচার">
+            <div class="sidebar-brand">
+                <h1>Card Studio</h1>
+                <p>News Graphics</p>
+            </div>
+        </div>
+
+        <div class="sidebar-scroll">
+            <!-- Text Input -->
+            <div class="editor-section">
+                <div class="section-label"><span class="icon">📝</span> News Content</div>
+                <span class="input-sub-label">শিরোনাম / Headline</span>
+                <textarea id="headlineInput" placeholder="শিরোনাম এখানে লিখুন..." rows="1"></textarea>
+                <span class="input-sub-label">বিস্তারিত / Subtitle & Body</span>
+                <textarea id="newsTextarea" placeholder="বিস্তারিত সংবাদ এখানে লিখুন...&#10;&#10;**বোল্ড** এবং *ইটালিক* সাপোর্ট করে।&#10;- বুলেট পয়েন্ট&#10;1. নম্বরযুক্ত তালিকা"></textarea>
+                <div class="char-count" id="charCount">0 characters</div>
+                <div class="format-hint">
+                    Supports: <code>**bold**</code> <code>*italic*</code> <code>- bullets</code> <code>1. numbered</code>
+                </div>
+            </div>
+
+            <!-- Background Image -->
+            <div class="editor-section">
+                <div class="section-label"><span class="icon">🖼️</span> Background Image</div>
+                <div class="upload-zone" id="bgUploadZone" onclick="document.getElementById('bgFileInput').click()">
+                    <span class="upload-icon">📷</span>
+                    <div class="upload-text">Drop image or <span>click to upload</span></div>
+                </div>
+                <input type="file" id="bgFileInput" accept="image/*">
+            </div>
+
+            <!-- Logo Upload (optional) -->
+            <div class="editor-section">
+                <div class="section-label"><span class="icon">🏷️</span> Logo (Optional)</div>
+                <div class="upload-zone" id="logoUploadZone" onclick="document.getElementById('logoFileInput').click()" style="padding:16px 12px;">
+                    <div class="upload-text">Click to replace default logo</div>
+                </div>
+                <input type="file" id="logoFileInput" accept="image/*">
+            </div>
+
+            <!-- Theme Color -->
+            <div class="editor-section">
+                <div class="section-label"><span class="icon">🎨</span> Theme Color</div>
+                <div class="color-palette" id="colorPalette"></div>
+                <div class="color-custom-wrapper">
+                    <input type="color" class="color-custom-input" id="customColorInput" value="#DC2626">
+                    <span class="color-custom-label">Custom color</span>
+                </div>
+            </div>
+
+            <!-- Brand Name -->
+            <div class="editor-section">
+                <div class="section-label"><span class="icon">📛</span> Page Name</div>
+                <input type="text" class="brand-input" id="brandNameInput" value="বঙ্গ সমাচার">
+            </div>
+
+            <!-- Motto -->
+            <div class="editor-section">
+                <div class="section-label"><span class="icon">✍️</span> Motto</div>
+                <input type="text" class="brand-input" id="mottoInput" value="অবিরাম জানানোর চেষ্টায়">
+            </div>
+        </div>
+
+        <div class="sidebar-actions">
+            <button class="btn-generate" id="btnGenerate" onclick="generateAllCards()">
+                ✨ Generate All Cards
+            </button>
+            <button class="btn-download-all" id="btnDownloadAll" onclick="downloadAllCards()">
+                ⬇ Download All (JPG)
+            </button>
+        </div>
+    </aside>
+
+    <!-- ═══════════════════════════════════════════════
+         MAIN GALLERY AREA
+         ═══════════════════════════════════════════════ -->
+    <main id="mainArea">
+        <div class="main-header">
+            <h2>Card Variations</h2>
+            <span class="card-count-badge" id="cardCountBadge">10 designs</span>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+            <div class="empty-icon">🎨</div>
+            <h2>News Card Studio</h2>
+            <p>Enter your news content in the editor panel, choose a theme color, and hit <strong>"Generate All Cards"</strong> to instantly create 10 professional card variations.</p>
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <div class="step-num">1</div>
+                    <div class="step-label">Write</div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-num">2</div>
+                    <div class="step-label">Style</div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-num">3</div>
+                    <div class="step-label">Generate</div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-num">4</div>
+                    <div class="step-label">Download</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gallery Grid (populated by JS) -->
+        <div class="gallery-grid" id="galleryGrid" style="display:none;"></div>
+    </main>
+
+    <!-- ═══════════════════════════════════════════════
+         PREVIEW MODAL
+         ═══════════════════════════════════════════════ -->
+    <div class="modal" id="previewModal">
+        <div class="modal-backdrop" onclick="closePreview()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closePreview()">✕</button>
+            <div class="modal-card-wrapper" id="modalCardWrapper"></div>
+            <div class="modal-actions">
+                <button class="btn-modal-download" id="modalDownloadBtn">⬇ Download as JPG</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Off-screen capture zone for html2canvas -->
+    <div id="captureZone"></div>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         JAVASCRIPT APPLICATION
+         ═══════════════════════════════════════════════════════ -->
+    <script>
+    (function() {
+        'use strict';
+
+        /* ═══════════════════════════════════════════════
+           STATE & CONFIGURATION
+           ═══════════════════════════════════════════════ */
+        var CARD_SIZE = 1200;
+
+        var PRESET_COLORS = [
+            { name: 'Crimson', value: '#DC2626' },
+            { name: 'Navy', value: '#1E3A5F' },
+            { name: 'Teal', value: '#0D9488' },
+            { name: 'Amber', value: '#D97706' },
+            { name: 'Purple', value: '#7C3AED' },
+            { name: 'Emerald', value: '#059669' },
+            { name: 'Rose', value: '#E11D48' },
+            { name: 'Royal Blue', value: '#2563EB' },
+            { name: 'Slate', value: '#475569' },
+            { name: 'Burnt Orange', value: '#EA580C' }
+        ];
+
+        /* CSS texture patterns (inline SVG data URIs for html2canvas compat) */
+        var TEXTURES = {
+            dots: "url(\"data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='rgba(0,0,0,0.04)'/%3E%3C/svg%3E\")",
+            diag: "url(\"data:image/svg+xml,%3Csvg width='12' height='12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 12L12 0M-3 3L3 -3M9 15L15 9' stroke='rgba(0,0,0,0.035)' stroke-width='1'/%3E%3C/svg%3E\")",
+            grid: "url(\"data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40V0h40' fill='none' stroke='rgba(0,0,0,0.03)' stroke-width='0.5'/%3E%3C/svg%3E\")",
+            noise: "url(\"data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E\")",
+            dotsDark: "url(\"data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='rgba(255,255,255,0.04)'/%3E%3C/svg%3E\")",
+            diagDark: "url(\"data:image/svg+xml,%3Csvg width='12' height='12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 12L12 0M-3 3L3 -3M9 15L15 9' stroke='rgba(255,255,255,0.04)' stroke-width='1'/%3E%3C/svg%3E\")",
+            gridDark: "url(\"data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40V0h40' fill='none' stroke='rgba(255,255,255,0.035)' stroke-width='0.5'/%3E%3C/svg%3E\")"
+        };
+
+        var state = {
+            accentColor: '#DC2626',
+            bgImageDataUrl: null,
+            logoDataUrl: null,
+            brandName: 'বঙ্গ সমাচার',
+            motto: 'অবিরাম জানানোর চেষ্টায়',
+            currentPreviewId: null,
+            imageToggles: {} // per-template image toggle state
+        };
+
+        // DOM references
+        var headlineInput = document.getElementById('headlineInput');
+        var textarea = document.getElementById('newsTextarea');
+        var charCount = document.getElementById('charCount');
+        var galleryGrid = document.getElementById('galleryGrid');
+        var emptyState = document.getElementById('emptyState');
+        var cardCountBadge = document.getElementById('cardCountBadge');
+        var btnGenerate = document.getElementById('btnGenerate');
+
+        /* ═══════════════════════════════════════════════
+           LOAD DEFAULT LOGO
+           ═══════════════════════════════════════════════ */
+        function loadDefaultLogo() {
+            var img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = function() {
+                try {
+                    var c = document.createElement('canvas');
+                    c.width = img.naturalWidth;
+                    c.height = img.naturalHeight;
+                    c.getContext('2d').drawImage(img, 0, 0);
+                    state.logoDataUrl = c.toDataURL('image/jpeg', 0.9);
+                } catch(e) {
+                    state.logoDataUrl = './bongo-shomachar.jpeg';
+                }
+            };
+            img.onerror = function() {
+                state.logoDataUrl = '';
+            };
+            img.src = './bongo-shomachar.jpeg';
+        }
+        loadDefaultLogo();
+
+        /* ═══════════════════════════════════════════════
+           COLOR HELPERS
+           ═══════════════════════════════════════════════ */
+        function hexToRgba(hex, alpha) {
+            hex = hex.replace('#', '');
+            var r = parseInt(hex.substring(0, 2), 16);
+            var g = parseInt(hex.substring(2, 4), 16);
+            var b = parseInt(hex.substring(4, 6), 16);
+            return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+        }
+
+        function lightenHex(hex, pct) {
+            hex = hex.replace('#', '');
+            var r = Math.min(255, Math.round(parseInt(hex.substring(0, 2), 16) + (255 - parseInt(hex.substring(0, 2), 16)) * pct));
+            var g = Math.min(255, Math.round(parseInt(hex.substring(2, 4), 16) + (255 - parseInt(hex.substring(2, 4), 16)) * pct));
+            var b = Math.min(255, Math.round(parseInt(hex.substring(4, 6), 16) + (255 - parseInt(hex.substring(4, 6), 16)) * pct));
+            return 'rgb(' + r + ',' + g + ',' + b + ')';
+        }
+
+        function darkenHex(hex, pct) {
+            hex = hex.replace('#', '');
+            var r = Math.round(parseInt(hex.substring(0, 2), 16) * (1 - pct));
+            var g = Math.round(parseInt(hex.substring(2, 4), 16) * (1 - pct));
+            var b = Math.round(parseInt(hex.substring(4, 6), 16) * (1 - pct));
+            return 'rgb(' + r + ',' + g + ',' + b + ')';
+        }
+
+        /* ═══════════════════════════════════════════════
+           TEXT PARSER
+           ═══════════════════════════════════════════════ */
+        function processInline(text) {
+            text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            text = text.replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>');
+            return text;
+        }
+
+        function parseText(rawText) {
+            if (!rawText || !rawText.trim()) return '';
+            var lines = rawText.split('\n');
+            var html = '';
+            var i = 0;
+            while (i < lines.length) {
+                var line = lines[i];
+                var trimmed = line.trim();
+                if (!trimmed) {
+                    html += '<div class="spacer"></div>';
+                    i++;
+                    continue;
+                }
+                if (/^[\u2022\u25CF\u25CB\u25AA\u25BA\u25B8\u25B9\u25C6\u25C7\-\*\►\▸\▹]\s/.test(trimmed)) {
+                    html += '<ul>';
+                    while (i < lines.length) {
+                        var lt = lines[i] ? lines[i].trim() : '';
+                        if (!lt || !/^[\u2022\u25CF\u25CB\u25AA\u25BA\u25B8\u25B9\u25C6\u25C7\-\*\►\▸\▹]\s/.test(lt)) break;
+                        var text = lt.replace(/^[\u2022\u25CF\u25CB\u25AA\u25BA\u25B8\u25B9\u25C6\u25C7\-\*\►\▸\▹]\s*/, '');
+                        html += '<li>' + processInline(text) + '</li>';
+                        i++;
+                    }
+                    html += '</ul>';
+                    continue;
+                }
+                if (/^\d+[\.\)]\s/.test(trimmed)) {
+                    html += '<ol>';
+                    while (i < lines.length) {
+                        var lt2 = lines[i] ? lines[i].trim() : '';
+                        if (!lt2 || !/^\d+[\.\)]\s/.test(lt2)) break;
+                        var text2 = lt2.replace(/^\d+[\.\)]\s*/, '');
+                        html += '<li>' + processInline(text2) + '</li>';
+                        i++;
+                    }
+                    html += '</ol>';
+                    continue;
+                }
+                html += '<p>' + processInline(trimmed) + '</p>';
+                i++;
+            }
+            return html;
+        }
+
+        function getTextLengthClass(text) {
+            var len = text.length;
+            if (len < 120) return 'text-short';
+            if (len < 300) return 'text-medium';
+            if (len < 600) return 'text-long';
+            return 'text-xlong';
+        }
+
+        /* ═══════════════════════════════════════════════
+           FOOTER HTML GENERATOR (Enhanced)
+           ═══════════════════════════════════════════════ */
+        function footerHtml(variant, opts) {
+            var logoSrc = opts.logoSrc || state.logoDataUrl || './bongo-shomachar.jpeg';
+            return '<div class="card-footer-bar ' + variant + '">' +
+                '<div class="fl-divider"></div>' +
+                '<img src="' + logoSrc + '" class="fl-logo" crossorigin="anonymous" />' +
+                '<div class="fl-info">' +
+                    '<span class="fl-brand">' + opts.brandName + '</span>' +
+                    '<span class="fl-motto">' + opts.motto + '</span>' +
+                '</div>' +
+            '</div>';
+        }
+
+        /* ═══════════════════════════════════════════════
+           BACKGROUND IMAGE HELPERS
+           — Every template uses bg image when available.
+           — Each card has a per-card checkbox to toggle.
+           ═══════════════════════════════════════════════ */
+        function bgImageLayer(bgImage, overlayGradient) {
+            if (!bgImage) return '';
+            return '<div style="position:absolute;inset:0;background-image:url(' + bgImage + ');background-size:cover;background-position:center;z-index:0;"></div>' +
+                   '<div style="position:absolute;inset:0;' + overlayGradient + ';z-index:1;"></div>';
+        }
+
+        /* ═══════════════════════════════════════════════
+           10 CARD TEMPLATES (Redesigned)
+           - Every template: separate heading + subtitle
+           - Every template: tasteful bg image usage
+           - CSS textures for visual depth
+           - Enhanced footer with prominent logo
+           ═══════════════════════════════════════════════ */
+        var TEMPLATES = [
+
+            /* ─── 1. BREAKING / URGENT ─── */
+            {
+                id: 'breaking',
+                name: 'Breaking News',
+                nameBn: 'ব্রেকিং নিউজ',
+                icon: '⚡',
+                generate: function(headline, bodyHtml, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? bgImageLayer(opts.bgImage, 'background:linear-gradient(160deg, rgba(8,8,12,0.82), rgba(8,8,12,0.92))')
+                        : '';
+                    var baseBg = 'background:linear-gradient(160deg, #0a0a12 0%, #151520 50%, #0d0d18 100%);';
+                    var lenClass = getTextLengthClass(headline + bodyHtml);
+
+                    return '<div class="card-canvas ' + lenClass + '" id="card-breaking" style="width:1200px;height:1200px;display:flex;flex-direction:column;' + baseBg + 'position:relative;">' +
+                        bgLayers +
+                        /* Texture overlay */
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.diagDark + ';z-index:2;pointer-events:none;"></div>' +
+                        /* Top accent bar */
+                        '<div style="height:8px;background:' + ac + ';flex-shrink:0;position:relative;z-index:3;"></div>' +
+                        /* Breaking label */
+                        '<div style="padding:40px 60px 0;flex-shrink:0;display:flex;align-items:center;gap:16px;position:relative;z-index:3;">' +
+                            '<div style="background:' + ac + ';color:#fff;font-family:Inter,sans-serif;font-size:20px;font-weight:800;padding:8px 22px;border-radius:4px;letter-spacing:2px;text-transform:uppercase;">⚡ BREAKING</div>' +
+                            '<div style="flex:1;height:2px;background:' + hexToRgba(ac, 0.3) + ';"></div>' +
+                        '</div>' +
+                        /* Heading */
+                        '<div style="padding:30px 60px 0;position:relative;z-index:3;flex-shrink:0;">' +
+                            '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:52px;line-height:1.35;color:#fff;border-left:5px solid ' + ac + ';padding-left:24px;">' + processInline(headline) + '</div>' +
+                        '</div>' +
+                        /* Subtitle/body */
+                        '<div style="flex:1;padding:24px 60px 20px;display:flex;flex-direction:column;justify-content:flex-start;overflow:hidden;position:relative;z-index:3;">' +
+                            '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-weight:400;line-height:1.65;color:rgba(255,255,255,0.82);">' +
+                                bodyHtml +
+                            '</div>' +
+                        '</div>' +
+                        '<div style="position:relative;z-index:3;">' + footerHtml('footer-on-dark', opts) + '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* ─── 2. STANDARD NEWS ─── */
+            {
+                id: 'standard',
+                name: 'Standard News',
+                nameBn: 'সংবাদ',
+                icon: '📰',
+                generate: function(headline, bodyHtml, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? bgImageLayer(opts.bgImage, 'background:linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.96) 100%)')
+                        : '';
+                    var lenClass = getTextLengthClass(headline + bodyHtml);
+
+                    return '<div class="card-canvas ' + lenClass + '" id="card-standard" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#ffffff;position:relative;">' +
+                        bgLayers +
+                        /* Texture */
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.grid + ';z-index:2;pointer-events:none;"></div>' +
+                        /* Top bar */
+                        '<div style="height:4px;background:linear-gradient(90deg,' + ac + ' 0%,' + ac + ' 35%,#e5e7eb 35%);flex-shrink:0;position:relative;z-index:3;"></div>' +
+                        /* Label */
+                        '<div style="padding:44px 60px 0;flex-shrink:0;position:relative;z-index:3;">' +
+                            '<div style="font-family:Inter,sans-serif;font-size:14px;font-weight:700;color:' + ac + ';letter-spacing:2px;text-transform:uppercase;">সংবাদ · NEWS</div>' +
+                        '</div>' +
+                        /* Heading */
+                        '<div style="padding:20px 60px 0;display:flex;position:relative;z-index:3;flex-shrink:0;">' +
+                            '<div style="width:5px;background:' + ac + ';border-radius:3px;flex-shrink:0;margin-right:28px;"></div>' +
+                            '<div style="font-family:\'Noto Serif Bengali\',\'Hind Siliguri\',serif;font-weight:700;font-size:48px;line-height:1.35;color:#1a1a2e;">' + processInline(headline) + '</div>' +
+                        '</div>' +
+                        /* Body */
+                        '<div style="flex:1;padding:24px 60px 20px 93px;display:flex;flex-direction:column;justify-content:flex-start;overflow:hidden;position:relative;z-index:3;">' +
+                            '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-weight:400;line-height:1.7;color:#3a3a4e;">' +
+                                bodyHtml +
+                            '</div>' +
+                        '</div>' +
+                        '<div style="position:relative;z-index:3;">' + footerHtml('footer-on-light', opts) + '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* ─── 3. EXPLAINER ─── */
+            {
+                id: 'explainer',
+                name: 'Explainer',
+                nameBn: 'বিশ্লেষণ',
+                icon: '💡',
+                generate: function(headline, bodyHtml, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? bgImageLayer(opts.bgImage, 'background:linear-gradient(135deg, ' + hexToRgba(ac, 0.88) + ', rgba(248,249,250,0.93))')
+                        : '';
+                    var lenClass = getTextLengthClass(headline + bodyHtml);
+
+                    return '<div class="card-canvas ' + lenClass + '" id="card-explainer" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:linear-gradient(135deg,' + hexToRgba(ac, 0.06) + ' 0%,' + hexToRgba(ac, 0.12) + ' 50%,#f8f9fa 100%);position:relative;">' +
+                        bgLayers +
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.dots + ';z-index:2;pointer-events:none;"></div>' +
+                        /* Label */
+                        '<div style="padding:48px 60px 0;flex-shrink:0;position:relative;z-index:3;">' +
+                            '<div style="display:inline-flex;align-items:center;gap:10px;background:' + ac + ';color:#fff;font-family:\'Hind Siliguri\',sans-serif;font-size:18px;font-weight:700;padding:10px 24px;border-radius:8px;">💡 বিশ্লেষণ</div>' +
+                        '</div>' +
+                        /* Inner card with heading + body */
+                        '<div style="flex:1;padding:28px 60px 20px;overflow:hidden;display:flex;position:relative;z-index:3;">' +
+                            '<div style="flex:1;background:rgba(255,255,255,0.95);border-radius:16px;padding:44px;box-shadow:0 4px 24px rgba(0,0,0,0.06);border:1px solid rgba(0,0,0,0.06);display:flex;flex-direction:column;justify-content:center;border-top:4px solid ' + ac + ';">' +
+                                '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:40px;line-height:1.35;color:#1a1a2e;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid ' + hexToRgba(ac, 0.15) + ';">' + processInline(headline) + '</div>' +
+                                '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-weight:400;line-height:1.75;color:#2a2a3e;">' +
+                                    bodyHtml +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div style="position:relative;z-index:3;">' + footerHtml('footer-on-light', opts) + '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* ─── 4. QUOTE / STATEMENT ─── */
+            {
+                id: 'quote',
+                name: 'Quote',
+                nameBn: 'উদ্ধৃতি',
+                icon: '💬',
+                generate: function(headline, bodyHtml, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? bgImageLayer(opts.bgImage, 'background:rgba(250,250,250,0.92)')
+                        : '';
+                    var lenClass = getTextLengthClass(headline + bodyHtml);
+
+                    return '<div class="card-canvas ' + lenClass + '" id="card-quote" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#fafafa;position:relative;">' +
+                        bgLayers +
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.diag + ';z-index:2;pointer-events:none;"></div>' +
+                        /* Decorative frame */
+                        '<div style="position:absolute;top:24px;left:24px;right:24px;bottom:24px;border:3px solid ' + hexToRgba(ac, 0.15) + ';border-radius:12px;pointer-events:none;z-index:3;"></div>' +
+                        /* Quote marks */
+                        '<div style="position:absolute;top:70px;left:70px;font-family:Georgia,serif;font-size:180px;line-height:1;color:' + hexToRgba(ac, 0.1) + ';pointer-events:none;z-index:3;">"</div>' +
+                        '<div style="position:absolute;bottom:130px;right:70px;font-family:Georgia,serif;font-size:180px;line-height:1;color:' + hexToRgba(ac, 0.1) + ';pointer-events:none;transform:rotate(180deg);z-index:3;">"</div>' +
+                        /* Content */
+                        '<div style="flex:1;padding:100px 100px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;position:relative;z-index:4;">' +
+                            '<div style="width:60px;height:4px;background:' + ac + ';border-radius:2px;margin-bottom:28px;"></div>' +
+                            '<div style="font-family:\'Noto Serif Bengali\',\'Hind Siliguri\',serif;font-weight:700;font-size:44px;line-height:1.4;color:#1a1a2e;margin-bottom:20px;">' + processInline(headline) + '</div>' +
+                            '<div class="card-content-area" style="font-family:\'Noto Serif Bengali\',\'Hind Siliguri\',serif;font-weight:400;font-style:italic;line-height:1.8;color:#3a3a4e;max-width:900px;">' +
+                                bodyHtml +
+                            '</div>' +
+                            '<div style="width:60px;height:4px;background:' + ac + ';border-radius:2px;margin-top:28px;"></div>' +
+                        '</div>' +
+                        '<div style="position:relative;z-index:4;">' + footerHtml('footer-on-light', opts) + '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* ─── 5. KEY FACTS ─── */
+            {
+                id: 'facts',
+                name: 'Key Facts',
+                nameBn: 'গুরুত্বপূর্ণ তথ্য',
+                icon: '📋',
+                generate: function(headline, bodyHtml, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? bgImageLayer(opts.bgImage, 'background:rgba(255,255,255,0.93)')
+                        : '';
+                    var lenClass = getTextLengthClass(headline + bodyHtml);
+
+                    return '<div class="card-canvas ' + lenClass + '" id="card-facts" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#ffffff;position:relative;">' +
+                        bgLayers +
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.grid + ';z-index:2;pointer-events:none;"></div>' +
+                        /* Header */
+                        '<div style="padding:48px 60px 0;flex-shrink:0;display:flex;align-items:center;gap:16px;position:relative;z-index:3;">' +
+                            '<div style="width:48px;height:48px;background:' + hexToRgba(ac, 0.1) + ';border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">📋</div>' +
+                            '<div>' +
+                                '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:28px;font-weight:700;color:#1a1a2e;">গুরুত্বপূর্ণ তথ্য</div>' +
+                                '<div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:' + ac + ';letter-spacing:1px;text-transform:uppercase;">KEY FACTS</div>' +
+                            '</div>' +
+                            '<div style="flex:1;height:2px;background:linear-gradient(90deg,' + hexToRgba(ac, 0.3) + ',transparent);margin-left:16px;"></div>' +
+                        '</div>' +
+                        /* Heading */
+                        '<div style="padding:28px 60px 0;position:relative;z-index:3;flex-shrink:0;">' +
+                            '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:38px;line-height:1.35;color:#1a1a2e;padding-bottom:16px;border-bottom:2px solid ' + hexToRgba(ac, 0.12) + ';">' + processInline(headline) + '</div>' +
+                        '</div>' +
+                        /* Body */
+                        '<div style="flex:1;padding:20px 60px 20px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;position:relative;z-index:3;">' +
+                            '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-weight:400;line-height:1.7;color:#2d2d42;">' +
+                                bodyHtml.replace(/<li>/g, '<li style="margin-bottom:14px;padding-left:12px;border-left:3px solid ' + ac + ';padding-bottom:4px;">') +
+                            '</div>' +
+                        '</div>' +
+                        '<div style="position:relative;z-index:3;">' + footerHtml('footer-on-light', opts) + '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* ─── 6. MINIMAL EDITORIAL ─── */
+            {
+                id: 'minimal',
+                name: 'Minimal',
+                nameBn: 'সম্পাদকীয়',
+                icon: '✦',
+                generate: function(headline, bodyHtml, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? bgImageLayer(opts.bgImage, 'background:rgba(255,255,255,0.94)')
+                        : '';
+                    var lenClass = getTextLengthClass(headline + bodyHtml);
+
+                    return '<div class="card-canvas ' + lenClass + '" id="card-minimal" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#ffffff;position:relative;">' +
+                        bgLayers +
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.dots + ';z-index:2;pointer-events:none;"></div>' +
+                        /* Minimal accent */
+                        '<div style="padding:80px 100px 0;flex-shrink:0;position:relative;z-index:3;">' +
+                            '<div style="width:50px;height:3px;background:' + ac + ';border-radius:2px;margin-bottom:24px;"></div>' +
+                            '<div style="font-family:Inter,sans-serif;font-size:12px;font-weight:600;color:' + ac + ';letter-spacing:3px;text-transform:uppercase;">EDITORIAL</div>' +
+                        '</div>' +
+                        /* Heading */
+                        '<div style="padding:28px 100px 0;position:relative;z-index:3;flex-shrink:0;">' +
+                            '<div style="font-family:\'Noto Serif Bengali\',\'Hind Siliguri\',serif;font-weight:700;font-size:42px;line-height:1.4;color:#1a1a2e;padding-bottom:20px;border-bottom:1px solid #e8e8ed;">' + processInline(headline) + '</div>' +
+                        '</div>' +
+                        /* Body */
+                        '<div style="flex:1;padding:24px 100px 20px;display:flex;flex-direction:column;justify-content:flex-start;overflow:hidden;position:relative;z-index:3;">' +
+                            '<div class="card-content-area" style="font-family:\'Noto Serif Bengali\',\'Hind Siliguri\',serif;font-weight:400;line-height:1.9;color:#2a2a3e;">' +
+                                bodyHtml +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="card-footer-bar footer-on-light" style="padding:28px 100px;position:relative;z-index:3;">' +
+                            '<div class="fl-divider" style="left:100px;right:100px;"></div>' +
+                            '<img src="' + (opts.logoSrc || state.logoDataUrl || './bongo-shomachar.jpeg') + '" class="fl-logo" style="width:50px;height:50px;" crossorigin="anonymous" />' +
+                            '<div class="fl-info">' +
+                                '<span class="fl-brand" style="font-size:22px;">' + opts.brandName + '</span>' +
+                                '<span class="fl-motto" style="font-size:15px;">' + opts.motto + '</span>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* ─── 7. IMAGE-FOCUSED ─── */
+            {
+                id: 'imagefocus',
+                name: 'Image Focus',
+                nameBn: 'ফটো নিউজ',
+                icon: '📸',
+                generate: function(headline, bodyHtml, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var lenClass = getTextLengthClass(headline + bodyHtml);
+                    var hasBg = useBg && opts.bgImage;
+                    var bgStyle = hasBg
+                        ? 'background-image:url(' + opts.bgImage + ');background-size:cover;background-position:center;'
+                        : 'background:linear-gradient(135deg,#2a2a3e 0%,#1a1a2e 50%,#0f0f1a 100%);';
+
+                    return '<div class="card-canvas ' + lenClass + '" id="card-imagefocus" style="width:1200px;height:1200px;position:relative;' + bgStyle + '">' +
+                        /* Dark gradient overlay from bottom */
+                        '<div style="position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.15) 65%, rgba(0,0,0,0.05) 100%);z-index:1;"></div>' +
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.dotsDark + ';z-index:2;pointer-events:none;"></div>' +
+                        /* Badge */
+                        '<div style="position:absolute;top:40px;left:40px;z-index:3;">' +
+                            '<div style="background:' + ac + ';color:#fff;font-family:Inter,sans-serif;font-size:13px;font-weight:700;padding:6px 16px;border-radius:4px;letter-spacing:1px;">PHOTO NEWS</div>' +
+                        '</div>' +
+                        /* Content at bottom */
+                        '<div style="position:absolute;bottom:0;left:0;right:0;padding:0 60px 120px;z-index:3;">' +
+                            '<div style="width:45px;height:4px;background:' + ac + ';border-radius:2px;margin-bottom:24px;"></div>' +
+                            '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:48px;line-height:1.3;color:#fff;margin-bottom:16px;">' + processInline(headline) + '</div>' +
+                            '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-weight:400;line-height:1.6;color:rgba(255,255,255,0.8);">' +
+                                bodyHtml +
+                            '</div>' +
+                        '</div>' +
+                        /* Footer */
+                        '<div class="card-footer-bar footer-on-dark" style="z-index:3;">' +
+                            '<div class="fl-divider" style="background:rgba(255,255,255,0.15);"></div>' +
+                            '<img src="' + (opts.logoSrc || state.logoDataUrl || './bongo-shomachar.jpeg') + '" class="fl-logo" crossorigin="anonymous" />' +
+                            '<div class="fl-info">' +
+                                '<span class="fl-brand">' + opts.brandName + '</span>' +
+                                '<span class="fl-motto">' + opts.motto + '</span>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* ─── 8. BOLD SOCIAL MEDIA ─── */
+            {
+                id: 'bold',
+                name: 'Bold Social',
+                nameBn: 'সোশ্যাল মিডিয়া',
+                icon: '🔥',
+                generate: function(headline, bodyHtml, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? '<div style="position:absolute;inset:0;background-image:url(' + opts.bgImage + ');background-size:cover;background-position:center;z-index:0;opacity:0.12;"></div>'
+                        : '';
+                    var lenClass = getTextLengthClass(headline + bodyHtml);
+
+                    return '<div class="card-canvas ' + lenClass + '" id="card-bold" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#ffffff;position:relative;overflow:hidden;">' +
+                        bgLayers +
+                        /* Large accent block */
+                        '<div style="background:' + ac + ';padding:60px 60px 50px;flex-shrink:0;position:relative;z-index:2;">' +
+                            '<div style="position:absolute;inset:0;background-image:' + TEXTURES.diagDark + ';pointer-events:none;"></div>' +
+                            '<div style="position:absolute;top:-30px;right:-30px;width:150px;height:150px;background:rgba(255,255,255,0.08);border-radius:50%;"></div>' +
+                            '<div style="position:absolute;bottom:-20px;right:100px;width:80px;height:80px;background:rgba(255,255,255,0.05);border-radius:50%;"></div>' +
+                            '<div style="font-family:Inter,sans-serif;font-size:14px;font-weight:800;color:rgba(255,255,255,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;position:relative;">TRENDING NOW</div>' +
+                            '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:52px;line-height:1.25;color:#fff;position:relative;">' + processInline(headline) + '</div>' +
+                        '</div>' +
+                        /* Body on white */
+                        '<div style="flex:1;padding:36px 60px 20px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;position:relative;z-index:2;">' +
+                            '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-weight:400;line-height:1.7;color:#2a2a3e;">' +
+                                bodyHtml +
+                            '</div>' +
+                        '</div>' +
+                        '<div style="position:relative;z-index:2;">' + footerHtml('footer-on-light', opts) + '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* ─── 9. DARK / DRAMATIC ─── */
+            {
+                id: 'dark',
+                name: 'Dark Mode',
+                nameBn: 'ডার্ক',
+                icon: '🌙',
+                generate: function(headline, bodyHtml, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? bgImageLayer(opts.bgImage, 'background:linear-gradient(160deg, rgba(8,8,14,0.88), rgba(8,8,14,0.94))')
+                        : '';
+                    var lenClass = getTextLengthClass(headline + bodyHtml);
+
+                    return '<div class="card-canvas ' + lenClass + '" id="card-dark" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#08080e;position:relative;">' +
+                        bgLayers +
+                        /* Radial glow */
+                        '<div style="position:absolute;top:50%;left:50%;width:800px;height:800px;transform:translate(-50%,-50%);background:radial-gradient(circle,' + hexToRgba(ac, 0.07) + ' 0%,transparent 70%);pointer-events:none;z-index:2;"></div>' +
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.gridDark + ';z-index:2;pointer-events:none;"></div>' +
+                        /* Top accent line */
+                        '<div style="height:3px;background:linear-gradient(90deg,transparent,' + ac + ',transparent);flex-shrink:0;position:relative;z-index:3;"></div>' +
+                        /* Label */
+                        '<div style="padding:48px 60px 0;flex-shrink:0;position:relative;z-index:3;">' +
+                            '<div style="display:inline-flex;align-items:center;gap:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:700;color:' + ac + ';letter-spacing:2px;text-transform:uppercase;">' +
+                                '<div style="width:8px;height:8px;background:' + ac + ';border-radius:50%;box-shadow:0 0 10px ' + ac + ';"></div>' +
+                                'EXCLUSIVE' +
+                            '</div>' +
+                        '</div>' +
+                        /* Heading */
+                        '<div style="padding:28px 60px 0;position:relative;z-index:3;flex-shrink:0;">' +
+                            '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:46px;line-height:1.35;color:#fff;padding-bottom:20px;border-bottom:1px solid ' + hexToRgba(ac, 0.2) + ';">' + processInline(headline) + '</div>' +
+                        '</div>' +
+                        /* Body */
+                        '<div style="flex:1;padding:24px 60px 20px;display:flex;flex-direction:column;justify-content:flex-start;overflow:hidden;position:relative;z-index:3;">' +
+                            '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-weight:400;line-height:1.7;color:rgba(255,255,255,0.82);">' +
+                                bodyHtml.replace(/<strong>/g, '<strong style="color:' + ac + ';">') +
+                            '</div>' +
+                        '</div>' +
+                        '<div style="position:relative;z-index:3;">' + footerHtml('footer-on-dark', opts) + '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* ─── 10. CLEAN / PROFESSIONAL ─── */
+            {
+                id: 'clean',
+                name: 'Professional',
+                nameBn: 'পেশাদার',
+                icon: '🏢',
+                generate: function(headline, bodyHtml, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? bgImageLayer(opts.bgImage, 'background:rgba(245,245,247,0.94)')
+                        : '';
+                    var lenClass = getTextLengthClass(headline + bodyHtml);
+
+                    return '<div class="card-canvas ' + lenClass + '" id="card-clean" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#f5f5f7;position:relative;">' +
+                        bgLayers +
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.diag + ';z-index:2;pointer-events:none;"></div>' +
+                        /* Clean header bar */
+                        '<div style="padding:44px 60px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e0e0e5;position:relative;z-index:3;">' +
+                            '<div style="display:flex;align-items:center;gap:14px;">' +
+                                '<img src="' + (opts.logoSrc || state.logoDataUrl || './bongo-shomachar.jpeg') + '" style="width:44px;height:44px;border-radius:10px;object-fit:cover;border:1.5px solid rgba(0,0,0,0.06);" crossorigin="anonymous" />' +
+                                '<span style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:22px;color:#1a1a2e;">' + opts.brandName + '</span>' +
+                            '</div>' +
+                            '<div style="font-family:Inter,sans-serif;font-size:12px;font-weight:600;color:' + ac + ';letter-spacing:1px;text-transform:uppercase;border:1.5px solid ' + ac + ';padding:5px 14px;border-radius:4px;">NEWS</div>' +
+                        '</div>' +
+                        /* Heading */
+                        '<div style="padding:40px 60px 0;position:relative;z-index:3;flex-shrink:0;">' +
+                            '<div style="font-family:\'Noto Serif Bengali\',\'Hind Siliguri\',serif;font-weight:700;font-size:44px;line-height:1.4;color:#1a1a2e;padding-bottom:24px;border-bottom:2px solid ' + hexToRgba(ac, 0.2) + ';">' + processInline(headline) + '</div>' +
+                        '</div>' +
+                        /* Body */
+                        '<div style="flex:1;padding:24px 60px 20px;overflow:hidden;display:flex;position:relative;z-index:3;">' +
+                            '<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-start;">' +
+                                '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-weight:400;line-height:1.75;color:#3a3a52;">' +
+                                    bodyHtml +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                        /* Footer with logo+motto */
+                        '<div style="padding:24px 60px;border-top:1px solid #e0e0e5;flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:12px;position:relative;z-index:3;">' +
+                            '<img src="' + (opts.logoSrc || state.logoDataUrl || './bongo-shomachar.jpeg') + '" style="width:30px;height:30px;border-radius:50%;object-fit:cover;" crossorigin="anonymous" />' +
+                            '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:16px;color:#666;">' + opts.motto + '</div>' +
+                        '</div>' +
+                    '</div>';
+                }
+            }
+        ];
+
+        /* ═══════════════════════════════════════════════
+           CARD GENERATION
+           ═══════════════════════════════════════════════ */
+        function generateAllCards() {
+            var headlineText = headlineInput.value.trim();
+            var bodyText = textarea.value.trim();
+
+            if (!headlineText && !bodyText) {
+                showToast('⚠️ Please enter a headline or body content.', 'warning');
+                headlineInput.focus();
+                return;
+            }
+
+            // Use headlineInput as primary headline, textarea as body
+            var headline = headlineText || 'শিরোনাম';
+            var bodyHtml = parseText(bodyText);
+
+            btnGenerate.innerHTML = '<span class="spinner"></span> Generating...';
+            btnGenerate.classList.add('loading');
+
+            setTimeout(function() {
+                var opts = {
+                    accentColor: state.accentColor,
+                    bgImage: state.bgImageDataUrl,
+                    logoSrc: state.logoDataUrl || './bongo-shomachar.jpeg',
+                    brandName: state.brandName,
+                    motto: state.motto
+                };
+
+                galleryGrid.innerHTML = '';
+
+                // Initialize toggles — all ON by default if bg image exists
+                TEMPLATES.forEach(function(tmpl) {
+                    if (state.imageToggles[tmpl.id] === undefined) {
+                        state.imageToggles[tmpl.id] = true;
+                    }
+                });
+
+                TEMPLATES.forEach(function(tmpl, index) {
+                    var useBg = state.imageToggles[tmpl.id] !== false;
+                    var cardHtml = tmpl.generate(headline, bodyHtml, opts, useBg);
+
+                    var wrapper = document.createElement('div');
+                    wrapper.className = 'gallery-card';
+                    wrapper.id = 'wrapper-' + tmpl.id;
+                    wrapper.style.animationDelay = (index * 70) + 'ms';
+
+                    var hasBg = !!opts.bgImage;
+
+                    wrapper.innerHTML =
+                        '<div class="card-preview" onclick="openPreview(\'' + tmpl.id + '\')">' +
+                            '<div class="card-scale-wrapper">' +
+                                cardHtml +
+                            '</div>' +
+                            '<div class="card-hover-overlay">' +
+                                '<span class="preview-action-btn">👁 Preview</span>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="card-meta">' +
+                            '<div class="meta-left">' +
+                                '<span class="template-icon">' + tmpl.icon + '</span>' +
+                                '<span class="template-name">' + tmpl.name + '</span>' +
+                            '</div>' +
+                            '<div class="meta-right">' +
+                                (hasBg ? '<label class="img-toggle"><input type="checkbox" ' + (useBg ? 'checked' : '') + ' onchange="toggleCardImage(\'' + tmpl.id + '\', this.checked)"> BG</label>' : '') +
+                                '<button class="btn-download-single" onclick="downloadCard(\'' + tmpl.id + '\', event)">⬇ JPG</button>' +
+                            '</div>' +
+                        '</div>';
+
+                    galleryGrid.appendChild(wrapper);
+                });
+
+                emptyState.style.display = 'none';
+                galleryGrid.style.display = 'grid';
+                cardCountBadge.classList.add('visible');
+
+                requestAnimationFrame(function() {
+                    updateCardScales();
+                });
+
+                btnGenerate.innerHTML = '✨ Generate All Cards';
+                btnGenerate.classList.remove('loading');
+                showToast('✅ 10 card variations generated!', 'success');
+            }, 300);
+        }
+
+        window.generateAllCards = generateAllCards;
+
+        /* ═══════════════════════════════════════════════
+           TOGGLE CARD IMAGE (per-card checkbox)
+           ═══════════════════════════════════════════════ */
+        function toggleCardImage(templateId, checked) {
+            state.imageToggles[templateId] = checked;
+            // Regenerate just this one card
+            var tmpl = TEMPLATES.find(function(t) { return t.id === templateId; });
+            if (!tmpl) return;
+
+            var headlineText = headlineInput.value.trim() || 'শিরোনাম';
+            var bodyHtml = parseText(textarea.value.trim());
+            var opts = {
+                accentColor: state.accentColor,
+                bgImage: state.bgImageDataUrl,
+                logoSrc: state.logoDataUrl || './bongo-shomachar.jpeg',
+                brandName: state.brandName,
+                motto: state.motto
+            };
+
+            var cardHtml = tmpl.generate(headlineText, bodyHtml, opts, checked);
+            var wrapper = document.getElementById('wrapper-' + templateId);
+            if (wrapper) {
+                var scaleWrap = wrapper.querySelector('.card-scale-wrapper');
+                if (scaleWrap) {
+                    scaleWrap.innerHTML = cardHtml;
+                    requestAnimationFrame(updateCardScales);
+                }
+            }
+        }
+
+        window.toggleCardImage = toggleCardImage;
+
+        /* ═══════════════════════════════════════════════
+           CARD SCALE MANAGEMENT
+           ═══════════════════════════════════════════════ */
+        function updateCardScales() {
+            document.querySelectorAll('.card-scale-wrapper').forEach(function(wrapper) {
+                var canvas = wrapper.querySelector('.card-canvas');
+                if (canvas) {
+                    var wrapperWidth = wrapper.offsetWidth;
+                    var scale = wrapperWidth / CARD_SIZE;
+                    canvas.style.transform = 'scale(' + scale + ')';
+                }
+            });
+        }
+
+        var resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(updateCardScales, 200);
+        });
+
+        /* ═══════════════════════════════════════════════
+           DOWNLOAD FUNCTIONS
+           ═══════════════════════════════════════════════ */
+        function downloadCard(templateId, event) {
+            if (event) {
+                event.stopPropagation();
+                event.preventDefault();
+            }
+
+            var cardElement = document.getElementById('card-' + templateId);
+            if (!cardElement) {
+                showToast('❌ Card not found. Please regenerate.', 'error');
+                return;
+            }
+
+            showToast('📥 Preparing download...', 'info');
+
+            var captureZone = document.getElementById('captureZone');
+            var clone = cardElement.cloneNode(true);
+            clone.style.transform = 'none';
+            clone.style.position = 'relative';
+            clone.style.width = CARD_SIZE + 'px';
+            clone.style.height = CARD_SIZE + 'px';
+            captureZone.innerHTML = '';
+            captureZone.appendChild(clone);
+
+            html2canvas(clone, {
+                width: CARD_SIZE,
+                height: CARD_SIZE,
+                scale: 1,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: null,
+                logging: false
+            }).then(function(canvas) {
+                var link = document.createElement('a');
+                link.download = 'bongo-shomachar-' + templateId + '-' + Date.now() + '.jpg';
+                link.href = canvas.toDataURL('image/jpeg', 0.95);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                captureZone.innerHTML = '';
+                showToast('✅ Card downloaded!', 'success');
+            }).catch(function(err) {
+                console.error('Download error:', err);
+                captureZone.innerHTML = '';
+                showToast('❌ Download failed. Try again.', 'error');
+            });
+        }
+
+        window.downloadCard = downloadCard;
+
+        function downloadAllCards() {
+            var cards = document.querySelectorAll('.card-canvas');
+            if (cards.length === 0) {
+                showToast('⚠️ Generate cards first!', 'warning');
+                return;
+            }
+
+            showToast('📥 Downloading all 10 cards...', 'info');
+
+            var index = 0;
+            function downloadNext() {
+                if (index >= TEMPLATES.length) {
+                    showToast('✅ All cards downloaded!', 'success');
+                    return;
+                }
+                var tmpl = TEMPLATES[index];
+                var cardEl = document.getElementById('card-' + tmpl.id);
+                if (!cardEl) { index++; downloadNext(); return; }
+
+                var captureZone = document.getElementById('captureZone');
+                var clone = cardEl.cloneNode(true);
+                clone.style.transform = 'none';
+                clone.style.position = 'relative';
+                clone.style.width = CARD_SIZE + 'px';
+                clone.style.height = CARD_SIZE + 'px';
+                captureZone.innerHTML = '';
+                captureZone.appendChild(clone);
+
+                html2canvas(clone, {
+                    width: CARD_SIZE, height: CARD_SIZE, scale: 1,
+                    useCORS: true, allowTaint: true, backgroundColor: null, logging: false
+                }).then(function(canvas) {
+                    var link = document.createElement('a');
+                    link.download = 'bongo-shomachar-' + tmpl.id + '-' + Date.now() + '.jpg';
+                    link.href = canvas.toDataURL('image/jpeg', 0.95);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    captureZone.innerHTML = '';
+                    index++;
+                    setTimeout(downloadNext, 400);
+                }).catch(function() {
+                    captureZone.innerHTML = '';
+                    index++;
+                    setTimeout(downloadNext, 200);
+                });
+            }
+            downloadNext();
+        }
+
+        window.downloadAllCards = downloadAllCards;
+
+        /* ═══════════════════════════════════════════════
+           PREVIEW MODAL
+           ═══════════════════════════════════════════════ */
+        function openPreview(templateId) {
+            var cardEl = document.getElementById('card-' + templateId);
+            if (!cardEl) return;
+
+            state.currentPreviewId = templateId;
+            var modal = document.getElementById('previewModal');
+            var wrapper = document.getElementById('modalCardWrapper');
+
+            var clone = cardEl.cloneNode(true);
+            clone.id = '';
+            clone.style.transform = 'scale(0.5)';
+            clone.style.transformOrigin = 'top left';
+
+            wrapper.innerHTML = '';
+            wrapper.appendChild(clone);
+
+            document.getElementById('modalDownloadBtn').onclick = function() {
+                downloadCard(templateId);
+            };
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        window.openPreview = openPreview;
+
+        function closePreview() {
+            document.getElementById('previewModal').classList.remove('active');
+            document.body.style.overflow = '';
+            state.currentPreviewId = null;
+        }
+
+        window.closePreview = closePreview;
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closePreview();
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) generateAllCards();
+        });
+
+        /* ═══════════════════════════════════════════════
+           TOAST NOTIFICATIONS
+           ═══════════════════════════════════════════════ */
+        function showToast(message, type) {
+            type = type || 'info';
+            var container = document.getElementById('toastContainer');
+            var toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(function() {
+                if (toast.parentNode) toast.parentNode.removeChild(toast);
+            }, 3000);
+        }
+
+        /* ═══════════════════════════════════════════════
+           COLOR PALETTE SETUP
+           ═══════════════════════════════════════════════ */
+        function setupColorPalette() {
+            var palette = document.getElementById('colorPalette');
+            PRESET_COLORS.forEach(function(color) {
+                var swatch = document.createElement('div');
+                swatch.className = 'color-swatch' + (color.value === state.accentColor ? ' active' : '');
+                swatch.style.background = color.value;
+                swatch.title = color.name;
+                swatch.onclick = function() {
+                    setAccentColor(color.value);
+                    document.querySelectorAll('.color-swatch').forEach(function(s) { s.classList.remove('active'); });
+                    swatch.classList.add('active');
+                };
+                palette.appendChild(swatch);
+            });
+
+            document.getElementById('customColorInput').addEventListener('input', function(e) {
+                setAccentColor(e.target.value);
+                document.querySelectorAll('.color-swatch').forEach(function(s) { s.classList.remove('active'); });
+            });
+        }
+
+        function setAccentColor(color) {
+            state.accentColor = color;
+            document.documentElement.style.setProperty('--accent', color);
+            var r = parseInt(color.slice(1, 3), 16);
+            var g = parseInt(color.slice(3, 5), 16);
+            var b = parseInt(color.slice(5, 7), 16);
+            document.documentElement.style.setProperty('--accent-glow', 'rgba(' + r + ',' + g + ',' + b + ',0.25)');
+        }
+
+        /* ═══════════════════════════════════════════════
+           FILE UPLOAD HANDLERS
+           ═══════════════════════════════════════════════ */
+        function setupFileUploads() {
+            var bgZone = document.getElementById('bgUploadZone');
+            var bgInput = document.getElementById('bgFileInput');
+
+            bgInput.addEventListener('change', function(e) {
+                handleImageUpload(e.target.files[0], 'bg');
+            });
+
+            bgZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                bgZone.style.borderColor = 'var(--accent)';
+                bgZone.style.background = 'rgba(220,38,38,0.05)';
+            });
+
+            bgZone.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                bgZone.style.borderColor = '';
+                bgZone.style.background = '';
+            });
+
+            bgZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                bgZone.style.borderColor = '';
+                bgZone.style.background = '';
+                if (e.dataTransfer.files[0]) {
+                    handleImageUpload(e.dataTransfer.files[0], 'bg');
+                }
+            });
+
+            var logoInput = document.getElementById('logoFileInput');
+            logoInput.addEventListener('change', function(e) {
+                handleImageUpload(e.target.files[0], 'logo');
+            });
+        }
+
+        function handleImageUpload(file, type) {
+            if (!file || !file.type.startsWith('image/')) return;
+
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var dataUrl = e.target.result;
+
+                if (type === 'bg') {
+                    state.bgImageDataUrl = dataUrl;
+                    var zone = document.getElementById('bgUploadZone');
+                    zone.classList.add('has-image');
+                    zone.innerHTML =
+                        '<img src="' + dataUrl + '" class="upload-preview-img" />' +
+                        '<button class="upload-remove" onclick="removeBgImage(event)">✕</button>';
+                    zone.onclick = null;
+                } else if (type === 'logo') {
+                    state.logoDataUrl = dataUrl;
+                    var zone2 = document.getElementById('logoUploadZone');
+                    zone2.classList.add('has-image');
+                    zone2.innerHTML =
+                        '<img src="' + dataUrl + '" class="upload-preview-img" style="height:80px;object-fit:contain;padding:8px;" />' +
+                        '<button class="upload-remove" onclick="removeLogoImage(event)">✕</button>';
+                    zone2.onclick = null;
+                    document.getElementById('sidebarLogo').src = dataUrl;
+                }
+                showToast('✅ Image uploaded!', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeBgImage(e) {
+            e.stopPropagation();
+            state.bgImageDataUrl = null;
+            var zone = document.getElementById('bgUploadZone');
+            zone.classList.remove('has-image');
+            zone.innerHTML =
+                '<span class="upload-icon">📷</span>' +
+                '<div class="upload-text">Drop image or <span>click to upload</span></div>';
+            zone.onclick = function() { document.getElementById('bgFileInput').click(); };
+        }
+        window.removeBgImage = removeBgImage;
+
+        function removeLogoImage(e) {
+            e.stopPropagation();
+            state.logoDataUrl = null;
+            loadDefaultLogo();
+            var zone = document.getElementById('logoUploadZone');
+            zone.classList.remove('has-image');
+            zone.innerHTML = '<div class="upload-text">Click to replace default logo</div>';
+            zone.onclick = function() { document.getElementById('logoFileInput').click(); };
+            document.getElementById('sidebarLogo').src = './bongo-shomachar.jpeg';
+        }
+        window.removeLogoImage = removeLogoImage;
+
+        /* ═══════════════════════════════════════════════
+           TEXT INPUT HANDLERS
+           ═══════════════════════════════════════════════ */
+        textarea.addEventListener('input', function() {
+            charCount.textContent = (headlineInput.value.length + textarea.value.length) + ' characters';
+        });
+        headlineInput.addEventListener('input', function() {
+            charCount.textContent = (headlineInput.value.length + textarea.value.length) + ' characters';
+        });
+
+        document.getElementById('brandNameInput').addEventListener('input', function(e) {
+            state.brandName = e.target.value || 'বঙ্গ সমাচার';
+        });
+
+        document.getElementById('mottoInput').addEventListener('input', function(e) {
+            state.motto = e.target.value || 'অবিরাম জানানোর চেষ্টায়';
+        });
+
+        /* ═══════════════════════════════════════════════
+           INITIALIZE
+           ═══════════════════════════════════════════════ */
+        setupColorPalette();
+        setupFileUploads();
+
+    })();
+    </script>
+</body>
+</html>
