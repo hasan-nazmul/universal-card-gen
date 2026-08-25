@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>বঙ্গ সমাচার — News Card Studio</title>
-    <meta name="description" content="Professional news card generator for Facebook-ready Bangladeshi news graphics. Create stunning visual cards instantly.">
+    <title>বঙ্গ সমাচার — News & Infographics Card Studio</title>
+    <meta name="description" content="Professional news card and infographics generator for Facebook-ready Bangladeshi news graphics. Create stunning visual cards instantly.">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,7 +25,7 @@
         }
 
         :root {
-            --sidebar-width: 400px;
+            --sidebar-width: 440px;
             --sidebar-bg: #0a0a10;
             --sidebar-surface: rgba(255, 255, 255, 0.035);
             --sidebar-border: rgba(255, 255, 255, 0.07);
@@ -84,18 +84,24 @@
         }
 
         .sidebar-header {
-            padding: 24px 28px 20px;
+            padding: 20px 24px 18px;
             display: flex;
             align-items: center;
-            gap: 16px;
+            justify-content: space-between;
             border-bottom: 1px solid var(--sidebar-border);
             flex-shrink: 0;
         }
 
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
         .sidebar-logo {
-            width: 52px;
-            height: 52px;
-            border-radius: 14px;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
             object-fit: cover;
             box-shadow: 0 0 20px rgba(220, 38, 38, 0.2);
             border: 2px solid rgba(255,255,255,0.1);
@@ -118,21 +124,60 @@
             margin-top: 2px;
         }
 
+        /* ─── Mode Tabs (News vs Infographics) ─── */
+        .mode-tabs {
+            display: flex;
+            background: rgba(0,0,0,0.35);
+            padding: 4px;
+            border-radius: var(--radius-md);
+            margin-bottom: 18px;
+            border: 1px solid var(--sidebar-border);
+        }
+
+        .mode-tab {
+            flex: 1;
+            padding: 10px 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: 'Hind Siliguri', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .mode-tab:hover {
+            color: var(--text-primary);
+        }
+
+        .mode-tab.active {
+            background: var(--surface);
+            color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
         .sidebar-scroll {
             flex: 1;
             overflow-y: auto;
-            padding: 20px 24px 24px;
+            padding: 20px 22px 24px;
         }
 
         /* ─── Section Groups ─── */
         .editor-section {
-            margin-bottom: 24px;
+            margin-bottom: 22px;
         }
 
         .section-label {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
             font-size: 11px;
             font-weight: 600;
             color: var(--text-secondary);
@@ -141,68 +186,54 @@
             margin-bottom: 10px;
         }
 
+        .section-label-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .section-label .icon {
             font-size: 14px;
         }
 
+        .btn-mini-action {
+            font-size: 11px;
+            color: var(--accent);
+            background: rgba(220,38,38,0.1);
+            border: 1px solid rgba(220,38,38,0.25);
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .btn-mini-action:hover {
+            background: var(--accent);
+            color: #fff;
+        }
+
         /* ─── Text Inputs ─── */
-        #headlineInput, #newsTextarea {
+        .form-input, .form-textarea {
             width: 100%;
             background: var(--sidebar-surface);
             border: 1px solid var(--sidebar-border);
             border-radius: var(--radius-md);
-            padding: 16px;
+            padding: 14px;
             color: var(--text-primary);
             font-family: 'Hind Siliguri', 'Inter', sans-serif;
-            font-size: 15px;
-            line-height: 1.7;
-            resize: vertical;
+            font-size: 14px;
+            line-height: 1.6;
             transition: border-color var(--transition), box-shadow var(--transition);
             outline: none;
         }
 
-        #headlineInput {
-            min-height: 50px;
-            max-height: 120px;
-            font-weight: 600;
-            font-size: 17px;
-            margin-bottom: 12px;
-        }
-
-        #newsTextarea {
-            min-height: 160px;
-            max-height: 320px;
-        }
-
-        #headlineInput:focus, #newsTextarea:focus {
+        .form-input:focus, .form-textarea:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 3px var(--accent-glow);
         }
 
-        #headlineInput::placeholder, #newsTextarea::placeholder {
-            color: var(--text-muted);
-            font-family: 'Hind Siliguri', sans-serif;
-        }
-
-        .char-count {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-align: right;
-            margin-top: 6px;
-        }
-
-        .format-hint {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 6px;
-            line-height: 1.6;
-        }
-
-        .format-hint code {
-            background: rgba(255,255,255,0.07);
-            padding: 1px 5px;
-            border-radius: 3px;
-            font-size: 10px;
+        .form-textarea {
+            resize: vertical;
         }
 
         .input-sub-label {
@@ -213,11 +244,107 @@
             display: block;
         }
 
+        .date-time-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* ─── Table Builder in Sidebar ─── */
+        .table-builder-wrap {
+            background: rgba(0,0,0,0.25);
+            border: 1px solid var(--sidebar-border);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            margin-top: 10px;
+        }
+
+        .table-builder-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .btn-table-action {
+            flex: 1;
+            padding: 7px 10px;
+            background: var(--sidebar-surface);
+            border: 1px solid var(--sidebar-border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 12px;
+            font-family: 'Hind Siliguri', sans-serif;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .btn-table-action:hover {
+            border-color: var(--accent);
+            background: rgba(220,38,38,0.08);
+            color: var(--accent);
+        }
+
+        .table-scroll-container {
+            max-height: 240px;
+            overflow: auto;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .mini-builder-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .mini-builder-table th, .mini-builder-table td {
+            padding: 6px 8px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.02);
+        }
+
+        .mini-builder-table th {
+            background: rgba(255,255,255,0.06);
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .mini-cell-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Hind Siliguri', sans-serif;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .mini-cell-input:focus {
+            background: rgba(255,255,255,0.08);
+            border-radius: 3px;
+        }
+
+        .btn-remove-row {
+            background: transparent;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 2px 4px;
+            opacity: 0.7;
+        }
+
+        .btn-remove-row:hover { opacity: 1; }
+
         /* ─── Image Upload ─── */
         .upload-zone {
             border: 2px dashed var(--sidebar-border);
             border-radius: var(--radius-md);
-            padding: 24px 16px;
+            padding: 20px 16px;
             text-align: center;
             cursor: pointer;
             transition: all var(--transition);
@@ -237,8 +364,8 @@
         }
 
         .upload-zone .upload-icon {
-            font-size: 28px;
-            margin-bottom: 8px;
+            font-size: 24px;
+            margin-bottom: 6px;
             display: block;
         }
 
@@ -254,7 +381,7 @@
 
         .upload-preview-img {
             width: 100%;
-            height: 140px;
+            height: 120px;
             object-fit: cover;
             display: block;
             border-radius: var(--radius-md);
@@ -264,13 +391,13 @@
             position: absolute;
             top: 8px;
             right: 8px;
-            width: 28px;
-            height: 28px;
-            background: rgba(0,0,0,0.7);
+            width: 26px;
+            height: 26px;
+            background: rgba(0,0,0,0.75);
             border: none;
             border-radius: 50%;
             color: #fff;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -294,8 +421,8 @@
         }
 
         .color-swatch {
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             border: 3px solid transparent;
             cursor: pointer;
@@ -320,7 +447,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 800;
             color: #fff;
             text-shadow: 0 1px 3px rgba(0,0,0,0.5);
@@ -334,8 +461,8 @@
         }
 
         .color-custom-input {
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
             border: none;
             border-radius: 50%;
             cursor: pointer;
@@ -355,27 +482,9 @@
             color: var(--text-muted);
         }
 
-        /* ─── Brand Input ─── */
-        .brand-input {
-            width: 100%;
-            background: var(--sidebar-surface);
-            border: 1px solid var(--sidebar-border);
-            border-radius: var(--radius-sm);
-            padding: 10px 14px;
-            color: var(--text-primary);
-            font-family: 'Hind Siliguri', sans-serif;
-            font-size: 14px;
-            outline: none;
-            transition: border-color var(--transition);
-        }
-
-        .brand-input:focus {
-            border-color: var(--accent);
-        }
-
         /* ─── Buttons ─── */
         .sidebar-actions {
-            padding: 16px 24px 24px;
+            padding: 16px 22px 22px;
             border-top: 1px solid var(--sidebar-border);
             flex-shrink: 0;
             display: flex;
@@ -445,7 +554,7 @@
         }
 
         .main-header {
-            padding: 24px 36px;
+            padding: 22px 36px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -483,7 +592,7 @@
 
         .empty-icon {
             font-size: 64px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             animation: float 3s ease-in-out infinite;
         }
 
@@ -501,56 +610,13 @@
             font-size: 15px;
             color: var(--text-secondary);
             line-height: 1.7;
-            max-width: 440px;
-        }
-
-        .workflow-steps {
-            display: flex;
-            gap: 16px;
-            margin-top: 36px;
-        }
-
-        .workflow-step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            padding: 20px 18px;
-            background: var(--sidebar-surface);
-            border: 1px solid var(--sidebar-border);
-            border-radius: var(--radius-md);
-            min-width: 100px;
-            transition: all var(--transition);
-        }
-
-        .workflow-step:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        .workflow-step .step-num {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), #b91c1c);
-            color: #fff;
-            font-size: 14px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .workflow-step .step-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-secondary);
+            max-width: 480px;
         }
 
         /* ─── Gallery Grid ─── */
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 28px;
             padding: 32px 36px 48px;
         }
@@ -644,7 +710,6 @@
             gap: 8px;
         }
 
-        /* ─── Per-card image toggle ─── */
         .img-toggle {
             display: flex;
             align-items: center;
@@ -883,8 +948,8 @@
         .card-footer-bar {
             display: flex;
             align-items: center;
-            gap: 20px;
-            padding: 30px 60px;
+            justify-content: space-between;
+            padding: 28px 60px;
             position: absolute;
             bottom: 0;
             left: 0;
@@ -892,8 +957,8 @@
         }
 
         .card-footer-bar .fl-logo {
-            width: 58px;
-            height: 58px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
             object-fit: cover;
             flex-shrink: 0;
@@ -917,7 +982,7 @@
         .card-footer-bar .fl-motto {
             font-family: 'Hind Siliguri', sans-serif;
             font-weight: 400;
-            font-size: 17px;
+            font-size: 16px;
             line-height: 1.3;
         }
 
@@ -929,21 +994,66 @@
             height: 1px;
         }
 
+        /* Source Badge Styling in Footer */
+        .fl-source-badge {
+            font-family: 'Hind Siliguri', sans-serif;
+            font-size: 17px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            border-radius: 20px;
+        }
+
         /* Footer color variants */
         .footer-on-dark .fl-logo { border-color: rgba(255,255,255,0.2); }
         .footer-on-dark .fl-brand { color: #ffffff; }
         .footer-on-dark .fl-motto { color: rgba(255,255,255,0.55); }
         .footer-on-dark .fl-divider { background: rgba(255,255,255,0.12); }
+        .footer-on-dark .fl-source-badge {
+            color: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.14);
+        }
 
         .footer-on-light .fl-logo { border-color: rgba(0,0,0,0.08); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .footer-on-light .fl-brand { color: #1a1a2e; }
         .footer-on-light .fl-motto { color: rgba(26,26,46,0.5); }
         .footer-on-light .fl-divider { background: rgba(0,0,0,0.08); }
+        .footer-on-light .fl-source-badge {
+            color: rgba(26,26,46,0.75);
+            background: rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.09);
+        }
 
         .footer-on-accent .fl-logo { border-color: rgba(255,255,255,0.25); }
         .footer-on-accent .fl-brand { color: #ffffff; }
         .footer-on-accent .fl-motto { color: rgba(255,255,255,0.65); }
         .footer-on-accent .fl-divider { background: rgba(255,255,255,0.2); }
+        .footer-on-accent .fl-source-badge {
+            color: #ffffff;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+
+        /* ─── Date Badge Component ─── */
+        .card-meta-date {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Hind Siliguri', sans-serif;
+            font-size: 17px;
+            font-weight: 500;
+        }
+
+        .date-badge-dark {
+            color: rgba(255,255,255,0.65);
+        }
+
+        .date-badge-light {
+            color: rgba(26,26,46,0.6);
+        }
 
         /* ─── Content area shared ─── */
         .card-content-area p {
@@ -998,7 +1108,7 @@
            10. RESPONSIVE
            ═══════════════════════════════════════════════ */
         @media (max-width: 1100px) {
-            :root { --sidebar-width: 340px; }
+            :root { --sidebar-width: 380px; }
             .gallery-grid { padding: 24px; gap: 20px; }
         }
 
@@ -1008,13 +1118,13 @@
                 width: 100%;
                 min-width: unset;
                 height: auto;
-                max-height: 50vh;
+                max-height: 55vh;
                 border-right: none;
                 border-bottom: 1px solid var(--sidebar-border);
             }
-            #mainArea { height: 50vh; }
+            #mainArea { height: 45vh; }
             .gallery-grid {
-                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             }
             .modal-card-wrapper { width: 90vw; height: 90vw; max-width: 500px; max-height: 500px; }
             .modal-card-wrapper .card-canvas {
@@ -1031,66 +1141,139 @@
          ═══════════════════════════════════════════════ -->
     <aside id="sidebar">
         <div class="sidebar-header">
-            <img id="sidebarLogo" src="./bongo-shomachar.jpeg" class="sidebar-logo" alt="বঙ্গ সমাচার">
-            <div class="sidebar-brand">
-                <h1>Card Studio</h1>
-                <p>News Graphics</p>
+            <div class="brand-group">
+                <img id="sidebarLogo" src="./bongo-shomachar.jpeg" class="sidebar-logo" alt="বঙ্গ সমাচার">
+                <div class="sidebar-brand">
+                    <h1>Card Studio</h1>
+                    <p>News & Infographics</p>
+                </div>
             </div>
         </div>
 
         <div class="sidebar-scroll">
-            <!-- Text Input -->
-            <div class="editor-section">
-                <div class="section-label"><span class="icon">📝</span> News Content</div>
-                <span class="input-sub-label">শিরোনাম / Headline</span>
-                <textarea id="headlineInput" placeholder="শিরোনাম এখানে লিখুন..." rows="1"></textarea>
-                <span class="input-sub-label">বিস্তারিত / Subtitle & Body</span>
-                <textarea id="newsTextarea" placeholder="বিস্তারিত সংবাদ এখানে লিখুন...&#10;&#10;**বোল্ড** এবং *ইটালিক* সাপোর্ট করে।&#10;- বুলেট পয়েন্ট&#10;1. নম্বরযুক্ত তালিকা"></textarea>
-                <div class="char-count" id="charCount">0 characters</div>
-                <div class="format-hint">
-                    Supports: <code>**bold**</code> <code>*italic*</code> <code>- bullets</code> <code>1. numbered</code>
+            <!-- Mode Switcher -->
+            <div class="mode-tabs">
+                <button class="mode-tab active" id="tabNewsMode" onclick="switchMode('news')">
+                    📰 সংবাদ কার্ড
+                </button>
+                <button class="mode-tab" id="tabInfographicMode" onclick="switchMode('infographic')">
+                    📊 ইনফোগ্রাফিক ও তালিকা
+                </button>
+            </div>
+
+            <!-- News Content Section (Visible in News Mode) -->
+            <div id="sectionNewsMode">
+                <div class="editor-section">
+                    <div class="section-label">
+                        <span class="section-label-left"><span class="icon">📝</span> সংবাদের বিষয়বস্তু</span>
+                    </div>
+                    <span class="input-sub-label">শিরোনাম / Headline</span>
+                    <textarea id="headlineInput" class="form-textarea" placeholder="সংবাদের প্রধান শিরোনাম এখানে লিখুন..." style="min-height:55px;font-weight:600;font-size:16px;margin-bottom:12px;"></textarea>
+                    
+                    <span class="input-sub-label">বিস্তারিত / Subtitle & Body</span>
+                    <textarea id="newsTextarea" class="form-textarea" placeholder="বিস্তারিত সংবাদ এখানে লিখুন...&#10;&#10;**বোল্ড** এবং *ইটালিক* সাপোর্ট করে।&#10;- বুলেট পয়েন্ট&#10;1. নম্বরযুক্ত তালিকা" style="min-height:160px;"></textarea>
+                    <div class="char-count" id="charCount">0 characters</div>
+                    <div class="format-hint" style="font-size:11px;color:var(--text-muted);margin-top:6px;">
+                        Supports: <code>**bold**</code> <code>*italic*</code> <code>- bullets</code> <code>1. numbered</code>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Infographics & Data Section (Visible in Infographic Mode) -->
+            <div id="sectionInfographicMode" style="display:none;">
+                <div class="editor-section">
+                    <div class="section-label">
+                        <span class="section-label-left"><span class="icon">📊</span> ইনফোগ্রাফিক ডাটা</span>
+                        <button class="btn-mini-action" onclick="loadSampleData()">নমুনা ডাটা লোড</button>
+                    </div>
+                    <span class="input-sub-label">ইনফোগ্রাফিক শিরোনাম / Title</span>
+                    <textarea id="infoHeadlineInput" class="form-textarea" placeholder="ইনফোগ্রাফিক বা পরিসংখ্যানের শিরোনাম..." style="min-height:55px;font-weight:600;font-size:16px;margin-bottom:12px;"></textarea>
+                    
+                    <span class="input-sub-label">সারসংক্ষেপ / Subtitle</span>
+                    <input type="text" id="infoSubtitleInput" class="form-input" placeholder="সংক্ষিপ্ত বিবরণ বা সারসংক্ষেপ..." style="margin-bottom:14px;">
+
+                    <span class="input-sub-label">📋 ডাটা পেস্ট করুন (Excel / TSV / CSV / Markdown)</span>
+                    <textarea id="rawTableInput" class="form-textarea" placeholder="Excel বা Google Sheets থেকে কপি করে পেস্ট করুন অথবা Markdown টেবিল লিখুন:&#10;&#10;জেলা	ক্ষতিগ্রস্ত এলাকা	আশ্রয়কেন্দ্র&#10;কুড়িগ্রাম	৯ উপজেলা	১২০টি&#10;সিলেট	১২ উপজেলা	১৯৫টি&#10;সুনামগঞ্জ	১১ উপজেলা	১৬০টি" style="min-height:110px;font-family:monospace;font-size:13px;"></textarea>
+
+                    <!-- Interactive Mini Table Builder with Highlight Checkboxes -->
+                    <div class="table-builder-wrap">
+                        <div class="table-builder-controls">
+                            <button class="btn-table-action" onclick="addTableColumn()">➕ কলাম যোগ</button>
+                            <button class="btn-table-action" onclick="addTableRow()">➕ সারি যোগ</button>
+                            <button class="btn-table-action" onclick="clearTableData()">🗑️ ক্লিয়ার</button>
+                        </div>
+                        <div class="table-scroll-container">
+                            <table class="mini-builder-table" id="miniBuilderTable">
+                                <!-- Populated dynamically by JS -->
+                            </table>
+                        </div>
+                        <div style="font-size:11px;color:var(--text-muted);margin-top:6px;">
+                            💡 সারি হাইলাইট করতে <strong>✨ চেকবক্স</strong> সিলেক্ট করুন।
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Date & Time Section -->
+            <div class="editor-section">
+                <div class="section-label">
+                    <span class="section-label-left"><span class="icon">📅</span> তারিখ ও সময়</span>
+                    <button class="btn-mini-action" onclick="setCurrentDateTime()">এখনকার সময়</button>
+                </div>
+                <div class="date-time-grid">
+                    <div>
+                        <span class="input-sub-label">তারিখ / Date</span>
+                        <input type="text" class="form-input" id="dateInput" placeholder="২৫ আগস্ট ২০২৬">
+                    </div>
+                    <div>
+                        <span class="input-sub-label">সময় (ঐচ্ছিক) / Time</span>
+                        <input type="text" class="form-input" id="timeInput" placeholder="রাত ১০:৩০ বা 10:30 PM">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Source Field (Available in both modes) -->
+            <div class="editor-section">
+                <div class="section-label">
+                    <span class="section-label-left"><span class="icon">🔗</span> তথ্যসূত্র (ঐচ্ছিক) / Source</span>
+                </div>
+                <input type="text" class="form-input" id="sourceInput" placeholder="উদা: দুর্যোগ ব্যবস্থাপনা অধিদপ্তর বা Reuters">
             </div>
 
             <!-- Background Image -->
             <div class="editor-section">
-                <div class="section-label"><span class="icon">🖼️</span> Background Image</div>
+                <div class="section-label"><span class="section-label-left"><span class="icon">🖼️</span> ব্যাকগ্রাউন্ড ছবি</span></div>
                 <div class="upload-zone" id="bgUploadZone" onclick="document.getElementById('bgFileInput').click()">
                     <span class="upload-icon">📷</span>
-                    <div class="upload-text">Drop image or <span>click to upload</span></div>
+                    <div class="upload-text">ছবি ড্রপ করুন বা <span>ক্লিক করে আপলোড</span></div>
                 </div>
                 <input type="file" id="bgFileInput" accept="image/*">
             </div>
 
             <!-- Logo Upload (optional) -->
             <div class="editor-section">
-                <div class="section-label"><span class="icon">🏷️</span> Logo (Optional)</div>
-                <div class="upload-zone" id="logoUploadZone" onclick="document.getElementById('logoFileInput').click()" style="padding:16px 12px;">
-                    <div class="upload-text">Click to replace default logo</div>
+                <div class="section-label"><span class="section-label-left"><span class="icon">🏷️</span> লোগো (ঐচ্ছিক)</span></div>
+                <div class="upload-zone" id="logoUploadZone" onclick="document.getElementById('logoFileInput').click()" style="padding:14px 12px;">
+                    <div class="upload-text">ডিফল্ট লোগো পরিবর্তন করতে ক্লিক করুন</div>
                 </div>
                 <input type="file" id="logoFileInput" accept="image/*">
             </div>
 
             <!-- Theme Color -->
             <div class="editor-section">
-                <div class="section-label"><span class="icon">🎨</span> Theme Color</div>
+                <div class="section-label"><span class="section-label-left"><span class="icon">🎨</span> থিম কালার</span></div>
                 <div class="color-palette" id="colorPalette"></div>
                 <div class="color-custom-wrapper">
                     <input type="color" class="color-custom-input" id="customColorInput" value="#DC2626">
-                    <span class="color-custom-label">Custom color</span>
+                    <span class="color-custom-label">কাস্টম কালার নির্বাচন</span>
                 </div>
             </div>
 
-            <!-- Brand Name -->
+            <!-- Brand Name & Motto -->
             <div class="editor-section">
-                <div class="section-label"><span class="icon">📛</span> Page Name</div>
-                <input type="text" class="brand-input" id="brandNameInput" value="বঙ্গ সমাচার">
-            </div>
-
-            <!-- Motto -->
-            <div class="editor-section">
-                <div class="section-label"><span class="icon">✍️</span> Motto</div>
-                <input type="text" class="brand-input" id="mottoInput" value="অবিরাম জানানোর চেষ্টায়">
+                <div class="section-label"><span class="section-label-left"><span class="icon">📛</span> পেজ ও ব্র্যান্ডিং</span></div>
+                <input type="text" class="form-input" id="brandNameInput" value="বঙ্গ সমাচার" style="margin-bottom:8px;">
+                <input type="text" class="form-input" id="mottoInput" value="অবিরাম জানানোর চেষ্টায়">
             </div>
         </div>
 
@@ -1109,33 +1292,15 @@
          ═══════════════════════════════════════════════ -->
     <main id="mainArea">
         <div class="main-header">
-            <h2>Card Variations</h2>
+            <h2 id="galleryHeading">Card Variations</h2>
             <span class="card-count-badge" id="cardCountBadge">10 designs</span>
         </div>
 
         <!-- Empty State -->
         <div class="empty-state" id="emptyState">
             <div class="empty-icon">🎨</div>
-            <h2>News Card Studio</h2>
-            <p>Enter your news content in the editor panel, choose a theme color, and hit <strong>"Generate All Cards"</strong> to instantly create 10 professional card variations.</p>
-            <div class="workflow-steps">
-                <div class="workflow-step">
-                    <div class="step-num">1</div>
-                    <div class="step-label">Write</div>
-                </div>
-                <div class="workflow-step">
-                    <div class="step-num">2</div>
-                    <div class="step-label">Style</div>
-                </div>
-                <div class="workflow-step">
-                    <div class="step-num">3</div>
-                    <div class="step-label">Generate</div>
-                </div>
-                <div class="workflow-step">
-                    <div class="step-num">4</div>
-                    <div class="step-label">Download</div>
-                </div>
-            </div>
+            <h2>News & Infographics Studio</h2>
+            <p>আপনার সংবাদ বা ইনফোগ্রাফিক ডাটা যুক্ত করুন, থিম পছন্দ করুন এবং <strong>"Generate All Cards"</strong> বাটনে ক্লিক করে সোশ্যাল মিডিয়া রেডি গ্রাফিক্স তৈরি করুন।</p>
         </div>
 
         <!-- Gallery Grid (populated by JS) -->
@@ -1193,30 +1358,152 @@
             dots: "url(\"data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='rgba(0,0,0,0.04)'/%3E%3C/svg%3E\")",
             diag: "url(\"data:image/svg+xml,%3Csvg width='12' height='12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 12L12 0M-3 3L3 -3M9 15L15 9' stroke='rgba(0,0,0,0.035)' stroke-width='1'/%3E%3C/svg%3E\")",
             grid: "url(\"data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40V0h40' fill='none' stroke='rgba(0,0,0,0.03)' stroke-width='0.5'/%3E%3C/svg%3E\")",
-            noise: "url(\"data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E\")",
             dotsDark: "url(\"data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='rgba(255,255,255,0.04)'/%3E%3C/svg%3E\")",
             diagDark: "url(\"data:image/svg+xml,%3Csvg width='12' height='12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 12L12 0M-3 3L3 -3M9 15L15 9' stroke='rgba(255,255,255,0.04)' stroke-width='1'/%3E%3C/svg%3E\")",
             gridDark: "url(\"data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40V0h40' fill='none' stroke='rgba(255,255,255,0.035)' stroke-width='0.5'/%3E%3C/svg%3E\")"
         };
 
         var state = {
+            mode: 'news', // 'news' or 'infographic'
             accentColor: '#DC2626',
             bgImageDataUrl: null,
             logoDataUrl: null,
             brandName: 'বঙ্গ সমাচার',
             motto: 'অবিরাম জানানোর চেষ্টায়',
+            date: '',
+            time: '',
+            source: '',
             currentPreviewId: null,
-            imageToggles: {} // per-template image toggle state
+            imageToggles: {},
+            tableData: {
+                headers: ['জেলা', 'ক্ষতিগ্রস্ত এলাকা', 'আশ্রয়কেন্দ্র'],
+                rows: [
+                    ['কুড়িগ্রাম', '৯ উপজেলা', '১২০টি'],
+                    ['সিলেট', '১২ উপজেলা', '১৯৫টি'],
+                    ['সুনামগঞ্জ', '১১ উপজেলা', '১৬০টি'],
+                    ['নেত্রকোনা', '৬ উপজেলা', '৮৫টি']
+                ],
+                highlights: [true, false, false, false]
+            }
         };
 
         // DOM references
         var headlineInput = document.getElementById('headlineInput');
         var textarea = document.getElementById('newsTextarea');
         var charCount = document.getElementById('charCount');
+        var infoHeadlineInput = document.getElementById('infoHeadlineInput');
+        var infoSubtitleInput = document.getElementById('infoSubtitleInput');
+        var rawTableInput = document.getElementById('rawTableInput');
+        var miniBuilderTable = document.getElementById('miniBuilderTable');
+        var dateInput = document.getElementById('dateInput');
+        var timeInput = document.getElementById('timeInput');
+        var sourceInput = document.getElementById('sourceInput');
         var galleryGrid = document.getElementById('galleryGrid');
         var emptyState = document.getElementById('emptyState');
         var cardCountBadge = document.getElementById('cardCountBadge');
         var btnGenerate = document.getElementById('btnGenerate');
+
+        /* ═══════════════════════════════════════════════
+           BENGALI DATE & TIME HELPERS
+           ═══════════════════════════════════════════════ */
+        var BANGLA_DIGITS = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+        var BANGLA_MONTHS = [
+            'জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন',
+            'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'
+        ];
+
+        function toBanglaNumber(num) {
+            return String(num).replace(/\d/g, function(d) {
+                return BANGLA_DIGITS[d];
+            });
+        }
+
+        function getBengaliCurrentDate() {
+            var now = new Date();
+            var day = toBanglaNumber(now.getDate());
+            var month = BANGLA_MONTHS[now.getMonth()];
+            var year = toBanglaNumber(now.getFullYear());
+            return day + ' ' + month + ' ' + year;
+        }
+
+        function getBengaliCurrentTime() {
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var period = 'সকাল';
+            if (hours >= 12 && hours < 16) period = 'দুপুর';
+            else if (hours >= 16 && hours < 19) period = 'বিকেল';
+            else if (hours >= 19 && hours < 23) period = 'সন্ধ্যা/রাত';
+            else if (hours >= 23 || hours < 5) period = 'রাত';
+
+            var displayHours = hours % 12 || 12;
+            var formattedMin = (minutes < 10 ? '0' : '') + minutes;
+            return period + ' ' + toBanglaNumber(displayHours) + ':' + toBanglaNumber(formattedMin);
+        }
+
+        function initDateTime() {
+            state.date = getBengaliCurrentDate();
+            dateInput.value = state.date;
+        }
+        initDateTime();
+
+        function setCurrentDateTime() {
+            state.date = getBengaliCurrentDate();
+            state.time = getBengaliCurrentTime();
+            dateInput.value = state.date;
+            timeInput.value = state.time;
+            showToast('🕒 বর্তমান তারিখ ও সময় সেট করা হয়েছে', 'info');
+        }
+        window.setCurrentDateTime = setCurrentDateTime;
+
+        dateInput.addEventListener('input', function(e) {
+            state.date = e.target.value.trim();
+        });
+        timeInput.addEventListener('input', function(e) {
+            state.time = e.target.value.trim();
+        });
+        sourceInput.addEventListener('input', function(e) {
+            state.source = e.target.value.trim();
+        });
+
+        /* Date badge helper for card headers */
+        function metaDateHtml(opts, isLight) {
+            if (!opts.date && !opts.time) return '';
+            var badgeClass = isLight ? 'date-badge-light' : 'date-badge-dark';
+            var timeContent = opts.time ? ' &nbsp;•&nbsp; ⏰ ' + opts.time : '';
+            return '<div class="card-meta-date ' + badgeClass + '">' +
+                '<span>📅 ' + (opts.date || '') + '</span>' +
+                (opts.time ? '<span>' + timeContent + '</span>' : '') +
+            '</div>';
+        }
+
+        /* ═══════════════════════════════════════════════
+           MODE SWITCHING (News vs Infographics)
+           ═══════════════════════════════════════════════ */
+        function switchMode(newMode) {
+            state.mode = newMode;
+            var btnNews = document.getElementById('tabNewsMode');
+            var btnInfo = document.getElementById('tabInfographicMode');
+            var secNews = document.getElementById('sectionNewsMode');
+            var secInfo = document.getElementById('sectionInfographicMode');
+            var heading = document.getElementById('galleryHeading');
+
+            if (newMode === 'news') {
+                btnNews.classList.add('active');
+                btnInfo.classList.remove('active');
+                secNews.style.display = 'block';
+                secInfo.style.display = 'none';
+                heading.textContent = 'News Card Variations';
+            } else {
+                btnInfo.classList.add('active');
+                btnNews.classList.remove('active');
+                secNews.style.display = 'none';
+                secInfo.style.display = 'block';
+                heading.textContent = 'Infographic & Data Variations';
+                renderMiniBuilderTable();
+            }
+        }
+        window.switchMode = switchMode;
 
         /* ═══════════════════════════════════════════════
            LOAD DEFAULT LOGO
@@ -1251,22 +1538,6 @@
             var g = parseInt(hex.substring(2, 4), 16);
             var b = parseInt(hex.substring(4, 6), 16);
             return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
-        }
-
-        function lightenHex(hex, pct) {
-            hex = hex.replace('#', '');
-            var r = Math.min(255, Math.round(parseInt(hex.substring(0, 2), 16) + (255 - parseInt(hex.substring(0, 2), 16)) * pct));
-            var g = Math.min(255, Math.round(parseInt(hex.substring(2, 4), 16) + (255 - parseInt(hex.substring(2, 4), 16)) * pct));
-            var b = Math.min(255, Math.round(parseInt(hex.substring(4, 6), 16) + (255 - parseInt(hex.substring(4, 6), 16)) * pct));
-            return 'rgb(' + r + ',' + g + ',' + b + ')';
-        }
-
-        function darkenHex(hex, pct) {
-            hex = hex.replace('#', '');
-            var r = Math.round(parseInt(hex.substring(0, 2), 16) * (1 - pct));
-            var g = Math.round(parseInt(hex.substring(2, 4), 16) * (1 - pct));
-            var b = Math.round(parseInt(hex.substring(4, 6), 16) * (1 - pct));
-            return 'rgb(' + r + ',' + g + ',' + b + ')';
         }
 
         /* ═══════════════════════════════════════════════
@@ -1330,25 +1601,27 @@
         }
 
         /* ═══════════════════════════════════════════════
-           FOOTER HTML GENERATOR (Enhanced)
+           FOOTER HTML GENERATOR (with Source Support)
            ═══════════════════════════════════════════════ */
         function footerHtml(variant, opts) {
             var logoSrc = opts.logoSrc || state.logoDataUrl || './bongo-shomachar.jpeg';
+            var sourceHtml = opts.source
+                ? '<div class="fl-source-badge">📌 সূত্র: ' + opts.source + '</div>'
+                : '';
+
             return '<div class="card-footer-bar ' + variant + '">' +
                 '<div class="fl-divider"></div>' +
-                '<img src="' + logoSrc + '" class="fl-logo" crossorigin="anonymous" />' +
-                '<div class="fl-info">' +
-                    '<span class="fl-brand">' + opts.brandName + '</span>' +
-                    '<span class="fl-motto">' + opts.motto + '</span>' +
+                '<div style="display:flex;align-items:center;gap:18px;">' +
+                    '<img src="' + logoSrc + '" class="fl-logo" crossorigin="anonymous" />' +
+                    '<div class="fl-info">' +
+                        '<span class="fl-brand">' + opts.brandName + '</span>' +
+                        '<span class="fl-motto">' + opts.motto + '</span>' +
+                    '</div>' +
                 '</div>' +
+                sourceHtml +
             '</div>';
         }
 
-        /* ═══════════════════════════════════════════════
-           BACKGROUND IMAGE HELPERS
-           — Every template uses bg image when available.
-           — Each card has a per-card checkbox to toggle.
-           ═══════════════════════════════════════════════ */
         function bgImageLayer(bgImage, overlayGradient) {
             if (!bgImage) return '';
             return '<div style="position:absolute;inset:0;background-image:url(' + bgImage + ');background-size:cover;background-position:center;z-index:0;"></div>' +
@@ -1356,15 +1629,158 @@
         }
 
         /* ═══════════════════════════════════════════════
-           10 CARD TEMPLATES (Redesigned)
-           - Every template: separate heading + subtitle
-           - Every template: tasteful bg image usage
-           - CSS textures for visual depth
-           - Enhanced footer with prominent logo
+           RAW DATA & TABLE PARSING
            ═══════════════════════════════════════════════ */
-        var TEMPLATES = [
+        function parseRawTable(text) {
+            if (!text || !text.trim()) return null;
+            var lines = text.trim().split('\n').filter(function(l) { return l.trim().length > 0; });
+            if (lines.length === 0) return null;
 
-            /* ─── 1. BREAKING / URGENT ─── */
+            var headers = [];
+            var rows = [];
+
+            var firstLine = lines[0];
+            var isMarkdown = firstLine.indexOf('|') !== -1;
+            var isTab = firstLine.indexOf('\t') !== -1;
+            var isCsv = !isTab && !isMarkdown && firstLine.indexOf(',') !== -1;
+
+            if (isMarkdown) {
+                var cleanLines = lines.filter(function(l) { return !/^\|?[\s\-:]+\|?[\s\-:|]+$/.test(l.trim()); });
+                headers = cleanLines[0].split('|').map(function(s) { return s.trim(); }).filter(Boolean);
+                for (var i = 1; i < cleanLines.length; i++) {
+                    var r = cleanLines[i].split('|').map(function(s) { return s.trim(); }).filter(Boolean);
+                    if (r.length) rows.push(r);
+                }
+            } else if (isTab) {
+                headers = lines[0].split('\t').map(function(s) { return s.trim(); });
+                for (var j = 1; j < lines.length; j++) {
+                    var tr = lines[j].split('\t').map(function(s) { return s.trim(); });
+                    if (tr.length) rows.push(tr);
+                }
+            } else if (isCsv) {
+                headers = lines[0].split(',').map(function(s) { return s.trim(); });
+                for (var k = 1; k < lines.length; k++) {
+                    var cr = lines[k].split(',').map(function(s) { return s.trim(); });
+                    if (cr.length) rows.push(cr);
+                }
+            } else {
+                headers = ['বিবরণ', 'তথ্য'];
+                for (var m = 0; m < lines.length; m++) {
+                    var parts = lines[m].split(/[:\-]/);
+                    if (parts.length >= 2) {
+                        rows.push([parts[0].trim(), parts.slice(1).join('-').trim()]);
+                    } else {
+                        rows.push([lines[m].trim(), '']);
+                    }
+                }
+            }
+
+            var highlights = [];
+            for (var h = 0; h < rows.length; h++) highlights.push(false);
+
+            return { headers: headers, rows: rows, highlights: highlights };
+        }
+
+        rawTableInput.addEventListener('input', function() {
+            var parsed = parseRawTable(rawTableInput.value);
+            if (parsed && parsed.headers.length) {
+                state.tableData = parsed;
+                renderMiniBuilderTable();
+            }
+        });
+
+        function renderMiniBuilderTable() {
+            var data = state.tableData;
+            if (!data.highlights) data.highlights = [];
+
+            var html = '<thead><tr>';
+            html += '<th style="width:36px;text-align:center;" title="সারি হাইলাইট করুন">✨</th>';
+            data.headers.forEach(function(h, hIdx) {
+                html += '<th><input class="mini-cell-input" value="' + h + '" oninput="updateHeader(' + hIdx + ', this.value)"></th>';
+            });
+            html += '<th style="width:30px;"></th></tr></thead><tbody>';
+
+            data.rows.forEach(function(row, rIdx) {
+                var isHigh = !!data.highlights[rIdx];
+                html += '<tr style="' + (isHigh ? 'background:rgba(220,38,38,0.15);' : '') + '">';
+                html += '<td style="text-align:center;"><input type="checkbox" ' + (isHigh ? 'checked' : '') + ' onchange="toggleRowHighlight(' + rIdx + ', this.checked)" title="এই সারি হাইলাইট করুন"></td>';
+                data.headers.forEach(function(_, cIdx) {
+                    var val = row[cIdx] !== undefined ? row[cIdx] : '';
+                    html += '<td><input class="mini-cell-input" value="' + val + '" oninput="updateCell(' + rIdx + ',' + cIdx + ', this.value)"></td>';
+                });
+                html += '<td style="text-align:center;"><button class="btn-remove-row" onclick="removeTableRow(' + rIdx + ')">✕</button></td></tr>';
+            });
+            html += '</tbody>';
+            miniBuilderTable.innerHTML = html;
+        }
+
+        function toggleRowHighlight(rIdx, checked) {
+            if (!state.tableData.highlights) state.tableData.highlights = [];
+            state.tableData.highlights[rIdx] = checked;
+            renderMiniBuilderTable();
+        }
+        window.toggleRowHighlight = toggleRowHighlight;
+
+        function updateHeader(idx, val) {
+            state.tableData.headers[idx] = val;
+        }
+        window.updateHeader = updateHeader;
+
+        function updateCell(r, c, val) {
+            if (!state.tableData.rows[r]) state.tableData.rows[r] = [];
+            state.tableData.rows[r][c] = val;
+        }
+        window.updateCell = updateCell;
+
+        function addTableColumn() {
+            state.tableData.headers.push('কলাম ' + (state.tableData.headers.length + 1));
+            state.tableData.rows.forEach(function(r) { r.push(''); });
+            renderMiniBuilderTable();
+        }
+        window.addTableColumn = addTableColumn;
+
+        function addTableRow() {
+            var newRow = [];
+            for (var i = 0; i < state.tableData.headers.length; i++) newRow.push('');
+            state.tableData.rows.push(newRow);
+            if (!state.tableData.highlights) state.tableData.highlights = [];
+            state.tableData.highlights.push(false);
+            renderMiniBuilderTable();
+        }
+        window.addTableRow = addTableRow;
+
+        function removeTableRow(idx) {
+            state.tableData.rows.splice(idx, 1);
+            if (state.tableData.highlights) state.tableData.highlights.splice(idx, 1);
+            renderMiniBuilderTable();
+        }
+        window.removeTableRow = removeTableRow;
+
+        function clearTableData() {
+            state.tableData = { headers: ['কলাম ১', 'কলাম ২'], rows: [['', '']], highlights: [false] };
+            rawTableInput.value = '';
+            renderMiniBuilderTable();
+        }
+        window.clearTableData = clearTableData;
+
+        function loadSampleData() {
+            infoHeadlineInput.value = 'উত্তরাঞ্চলে বন্যা পরিস্থিতি ও ত্রাণ সহায়তা';
+            infoSubtitleInput.value = 'বন্যা কবলিত প্রধান জেলাগুলোর সার্বিক চিত্র ও ক্ষয়ক্ষতি';
+            sourceInput.value = 'দুর্যোগ ব্যবস্থাপনা অধিদপ্তর';
+            state.source = 'দুর্যোগ ব্যবস্থাপনা অধিদপ্তর';
+            rawTableInput.value = "জেলা\tপ্লাবিত এলাকা\tক্ষতিগ্রস্ত মানুষ\tআশ্রয়কেন্দ্র\nকুড়িগ্রাম\t৯ উপজেলা\t৪.৫ লাখ\t১২০টি\nসিলেট\t১২ উপজেলা\t৬.২ লাখ\t১৯৫টি\nসুনামগঞ্জ\t১১ উপজেলা\t৫.১ লাখ\t১৬০টি\nনেত্রকোনা\t৬ উপজেলা\t২.৮ লাখ\t৮৫টি";
+            state.tableData = parseRawTable(rawTableInput.value);
+            state.tableData.highlights = [true, false, false, false];
+            renderMiniBuilderTable();
+            showToast('📋 নমুনা ডাটা ও সোর্স লোড হয়েছে', 'success');
+        }
+        window.loadSampleData = loadSampleData;
+
+        /* ═══════════════════════════════════════════════
+           NEWS CARD TEMPLATES (10 Variations)
+           ═══════════════════════════════════════════════ */
+        var NEWS_TEMPLATES = [
+            /* 1. BREAKING */
             {
                 id: 'breaking',
                 name: 'Breaking News',
@@ -1373,29 +1789,27 @@
                 generate: function(headline, bodyHtml, opts, useBg) {
                     var ac = opts.accentColor;
                     var bgLayers = useBg && opts.bgImage
-                        ? bgImageLayer(opts.bgImage, 'background:linear-gradient(160deg, rgba(8,8,12,0.82), rgba(8,8,12,0.92))')
+                        ? bgImageLayer(opts.bgImage, 'background:linear-gradient(160deg, rgba(8,8,12,0.84), rgba(8,8,12,0.92))')
                         : '';
                     var baseBg = 'background:linear-gradient(160deg, #0a0a12 0%, #151520 50%, #0d0d18 100%);';
                     var lenClass = getTextLengthClass(headline + bodyHtml);
 
                     return '<div class="card-canvas ' + lenClass + '" id="card-breaking" style="width:1200px;height:1200px;display:flex;flex-direction:column;' + baseBg + 'position:relative;">' +
                         bgLayers +
-                        /* Texture overlay */
                         '<div style="position:absolute;inset:0;background-image:' + TEXTURES.diagDark + ';z-index:2;pointer-events:none;"></div>' +
-                        /* Top accent bar */
                         '<div style="height:8px;background:' + ac + ';flex-shrink:0;position:relative;z-index:3;"></div>' +
-                        /* Breaking label */
-                        '<div style="padding:40px 60px 0;flex-shrink:0;display:flex;align-items:center;gap:16px;position:relative;z-index:3;">' +
-                            '<div style="background:' + ac + ';color:#fff;font-family:Inter,sans-serif;font-size:20px;font-weight:800;padding:8px 22px;border-radius:4px;letter-spacing:2px;text-transform:uppercase;">⚡ BREAKING</div>' +
-                            '<div style="flex:1;height:2px;background:' + hexToRgba(ac, 0.3) + ';"></div>' +
+                        '<div style="padding:40px 60px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3;">' +
+                            '<div style="display:flex;align-items:center;gap:16px;">' +
+                                '<div style="background:' + ac + ';color:#fff;font-family:Inter,sans-serif;font-size:20px;font-weight:800;padding:8px 22px;border-radius:4px;letter-spacing:2px;text-transform:uppercase;">⚡ BREAKING</div>' +
+                                '<div style="width:80px;height:2px;background:' + hexToRgba(ac, 0.4) + ';"></div>' +
+                            '</div>' +
+                            metaDateHtml(opts, false) +
                         '</div>' +
-                        /* Heading */
-                        '<div style="padding:30px 60px 0;position:relative;z-index:3;flex-shrink:0;">' +
+                        '<div style="padding:32px 60px 0;position:relative;z-index:3;flex-shrink:0;">' +
                             '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:52px;line-height:1.35;color:#fff;border-left:5px solid ' + ac + ';padding-left:24px;">' + processInline(headline) + '</div>' +
                         '</div>' +
-                        /* Subtitle/body */
                         '<div style="flex:1;padding:24px 60px 20px;display:flex;flex-direction:column;justify-content:flex-start;overflow:hidden;position:relative;z-index:3;">' +
-                            '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-weight:400;line-height:1.65;color:rgba(255,255,255,0.82);">' +
+                            '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-weight:400;line-height:1.65;color:rgba(255,255,255,0.85);">' +
                                 bodyHtml +
                             '</div>' +
                         '</div>' +
@@ -1404,7 +1818,7 @@
                 }
             },
 
-            /* ─── 2. STANDARD NEWS ─── */
+            /* 2. STANDARD */
             {
                 id: 'standard',
                 name: 'Standard News',
@@ -1419,20 +1833,16 @@
 
                     return '<div class="card-canvas ' + lenClass + '" id="card-standard" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#ffffff;position:relative;">' +
                         bgLayers +
-                        /* Texture */
                         '<div style="position:absolute;inset:0;background-image:' + TEXTURES.grid + ';z-index:2;pointer-events:none;"></div>' +
-                        /* Top bar */
                         '<div style="height:4px;background:linear-gradient(90deg,' + ac + ' 0%,' + ac + ' 35%,#e5e7eb 35%);flex-shrink:0;position:relative;z-index:3;"></div>' +
-                        /* Label */
-                        '<div style="padding:44px 60px 0;flex-shrink:0;position:relative;z-index:3;">' +
+                        '<div style="padding:44px 60px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3;">' +
                             '<div style="font-family:Inter,sans-serif;font-size:14px;font-weight:700;color:' + ac + ';letter-spacing:2px;text-transform:uppercase;">সংবাদ · NEWS</div>' +
+                            metaDateHtml(opts, true) +
                         '</div>' +
-                        /* Heading */
                         '<div style="padding:20px 60px 0;display:flex;position:relative;z-index:3;flex-shrink:0;">' +
                             '<div style="width:5px;background:' + ac + ';border-radius:3px;flex-shrink:0;margin-right:28px;"></div>' +
                             '<div style="font-family:\'Noto Serif Bengali\',\'Hind Siliguri\',serif;font-weight:700;font-size:48px;line-height:1.35;color:#1a1a2e;">' + processInline(headline) + '</div>' +
                         '</div>' +
-                        /* Body */
                         '<div style="flex:1;padding:24px 60px 20px 93px;display:flex;flex-direction:column;justify-content:flex-start;overflow:hidden;position:relative;z-index:3;">' +
                             '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-weight:400;line-height:1.7;color:#3a3a4e;">' +
                                 bodyHtml +
@@ -1443,7 +1853,7 @@
                 }
             },
 
-            /* ─── 3. EXPLAINER ─── */
+            /* 3. EXPLAINER */
             {
                 id: 'explainer',
                 name: 'Explainer',
@@ -1459,12 +1869,11 @@
                     return '<div class="card-canvas ' + lenClass + '" id="card-explainer" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:linear-gradient(135deg,' + hexToRgba(ac, 0.06) + ' 0%,' + hexToRgba(ac, 0.12) + ' 50%,#f8f9fa 100%);position:relative;">' +
                         bgLayers +
                         '<div style="position:absolute;inset:0;background-image:' + TEXTURES.dots + ';z-index:2;pointer-events:none;"></div>' +
-                        /* Label */
-                        '<div style="padding:48px 60px 0;flex-shrink:0;position:relative;z-index:3;">' +
-                            '<div style="display:inline-flex;align-items:center;gap:10px;background:' + ac + ';color:#fff;font-family:\'Hind Siliguri\',sans-serif;font-size:18px;font-weight:700;padding:10px 24px;border-radius:8px;">💡 বিশ্লেষণ</div>' +
+                        '<div style="padding:48px 60px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3;">' +
+                            '<div style="display:inline-flex;align-items:center;gap:10px;background:' + ac + ';color:#fff;font-family:\'Hind Siliguri\',sans-serif;font-size:18px;font-weight:700;padding:8px 22px;border-radius:8px;">💡 বিশ্লেষণ</div>' +
+                            metaDateHtml(opts, true) +
                         '</div>' +
-                        /* Inner card with heading + body */
-                        '<div style="flex:1;padding:28px 60px 20px;overflow:hidden;display:flex;position:relative;z-index:3;">' +
+                        '<div style="flex:1;padding:24px 60px 20px;overflow:hidden;display:flex;position:relative;z-index:3;">' +
                             '<div style="flex:1;background:rgba(255,255,255,0.95);border-radius:16px;padding:44px;box-shadow:0 4px 24px rgba(0,0,0,0.06);border:1px solid rgba(0,0,0,0.06);display:flex;flex-direction:column;justify-content:center;border-top:4px solid ' + ac + ';">' +
                                 '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:40px;line-height:1.35;color:#1a1a2e;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid ' + hexToRgba(ac, 0.15) + ';">' + processInline(headline) + '</div>' +
                                 '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-weight:400;line-height:1.75;color:#2a2a3e;">' +
@@ -1477,7 +1886,7 @@
                 }
             },
 
-            /* ─── 4. QUOTE / STATEMENT ─── */
+            /* 4. QUOTE */
             {
                 id: 'quote',
                 name: 'Quote',
@@ -1493,12 +1902,10 @@
                     return '<div class="card-canvas ' + lenClass + '" id="card-quote" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#fafafa;position:relative;">' +
                         bgLayers +
                         '<div style="position:absolute;inset:0;background-image:' + TEXTURES.diag + ';z-index:2;pointer-events:none;"></div>' +
-                        /* Decorative frame */
                         '<div style="position:absolute;top:24px;left:24px;right:24px;bottom:24px;border:3px solid ' + hexToRgba(ac, 0.15) + ';border-radius:12px;pointer-events:none;z-index:3;"></div>' +
-                        /* Quote marks */
+                        '<div style="position:absolute;top:60px;right:60px;z-index:4;">' + metaDateHtml(opts, true) + '</div>' +
                         '<div style="position:absolute;top:70px;left:70px;font-family:Georgia,serif;font-size:180px;line-height:1;color:' + hexToRgba(ac, 0.1) + ';pointer-events:none;z-index:3;">"</div>' +
                         '<div style="position:absolute;bottom:130px;right:70px;font-family:Georgia,serif;font-size:180px;line-height:1;color:' + hexToRgba(ac, 0.1) + ';pointer-events:none;transform:rotate(180deg);z-index:3;">"</div>' +
-                        /* Content */
                         '<div style="flex:1;padding:100px 100px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;position:relative;z-index:4;">' +
                             '<div style="width:60px;height:4px;background:' + ac + ';border-radius:2px;margin-bottom:28px;"></div>' +
                             '<div style="font-family:\'Noto Serif Bengali\',\'Hind Siliguri\',serif;font-weight:700;font-size:44px;line-height:1.4;color:#1a1a2e;margin-bottom:20px;">' + processInline(headline) + '</div>' +
@@ -1512,7 +1919,7 @@
                 }
             },
 
-            /* ─── 5. KEY FACTS ─── */
+            /* 5. KEY FACTS */
             {
                 id: 'facts',
                 name: 'Key Facts',
@@ -1528,20 +1935,19 @@
                     return '<div class="card-canvas ' + lenClass + '" id="card-facts" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#ffffff;position:relative;">' +
                         bgLayers +
                         '<div style="position:absolute;inset:0;background-image:' + TEXTURES.grid + ';z-index:2;pointer-events:none;"></div>' +
-                        /* Header */
-                        '<div style="padding:48px 60px 0;flex-shrink:0;display:flex;align-items:center;gap:16px;position:relative;z-index:3;">' +
-                            '<div style="width:48px;height:48px;background:' + hexToRgba(ac, 0.1) + ';border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">📋</div>' +
-                            '<div>' +
-                                '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:28px;font-weight:700;color:#1a1a2e;">গুরুত্বপূর্ণ তথ্য</div>' +
-                                '<div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:' + ac + ';letter-spacing:1px;text-transform:uppercase;">KEY FACTS</div>' +
+                        '<div style="padding:48px 60px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3;">' +
+                            '<div style="display:flex;align-items:center;gap:16px;">' +
+                                '<div style="width:48px;height:48px;background:' + hexToRgba(ac, 0.1) + ';border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">📋</div>' +
+                                '<div>' +
+                                    '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:28px;font-weight:700;color:#1a1a2e;">গুরুত্বপূর্ণ তথ্য</div>' +
+                                    '<div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:' + ac + ';letter-spacing:1px;text-transform:uppercase;">KEY FACTS</div>' +
+                                '</div>' +
                             '</div>' +
-                            '<div style="flex:1;height:2px;background:linear-gradient(90deg,' + hexToRgba(ac, 0.3) + ',transparent);margin-left:16px;"></div>' +
+                            metaDateHtml(opts, true) +
                         '</div>' +
-                        /* Heading */
                         '<div style="padding:28px 60px 0;position:relative;z-index:3;flex-shrink:0;">' +
                             '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:38px;line-height:1.35;color:#1a1a2e;padding-bottom:16px;border-bottom:2px solid ' + hexToRgba(ac, 0.12) + ';">' + processInline(headline) + '</div>' +
                         '</div>' +
-                        /* Body */
                         '<div style="flex:1;padding:20px 60px 20px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;position:relative;z-index:3;">' +
                             '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-weight:400;line-height:1.7;color:#2d2d42;">' +
                                 bodyHtml.replace(/<li>/g, '<li style="margin-bottom:14px;padding-left:12px;border-left:3px solid ' + ac + ';padding-bottom:4px;">') +
@@ -1552,7 +1958,7 @@
                 }
             },
 
-            /* ─── 6. MINIMAL EDITORIAL ─── */
+            /* 6. MINIMAL EDITORIAL */
             {
                 id: 'minimal',
                 name: 'Minimal',
@@ -1568,16 +1974,16 @@
                     return '<div class="card-canvas ' + lenClass + '" id="card-minimal" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#ffffff;position:relative;">' +
                         bgLayers +
                         '<div style="position:absolute;inset:0;background-image:' + TEXTURES.dots + ';z-index:2;pointer-events:none;"></div>' +
-                        /* Minimal accent */
-                        '<div style="padding:80px 100px 0;flex-shrink:0;position:relative;z-index:3;">' +
-                            '<div style="width:50px;height:3px;background:' + ac + ';border-radius:2px;margin-bottom:24px;"></div>' +
-                            '<div style="font-family:Inter,sans-serif;font-size:12px;font-weight:600;color:' + ac + ';letter-spacing:3px;text-transform:uppercase;">EDITORIAL</div>' +
+                        '<div style="padding:80px 100px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3;">' +
+                            '<div>' +
+                                '<div style="width:50px;height:3px;background:' + ac + ';border-radius:2px;margin-bottom:14px;"></div>' +
+                                '<div style="font-family:Inter,sans-serif;font-size:12px;font-weight:600;color:' + ac + ';letter-spacing:3px;text-transform:uppercase;">EDITORIAL</div>' +
+                            '</div>' +
+                            metaDateHtml(opts, true) +
                         '</div>' +
-                        /* Heading */
                         '<div style="padding:28px 100px 0;position:relative;z-index:3;flex-shrink:0;">' +
                             '<div style="font-family:\'Noto Serif Bengali\',\'Hind Siliguri\',serif;font-weight:700;font-size:42px;line-height:1.4;color:#1a1a2e;padding-bottom:20px;border-bottom:1px solid #e8e8ed;">' + processInline(headline) + '</div>' +
                         '</div>' +
-                        /* Body */
                         '<div style="flex:1;padding:24px 100px 20px;display:flex;flex-direction:column;justify-content:flex-start;overflow:hidden;position:relative;z-index:3;">' +
                             '<div class="card-content-area" style="font-family:\'Noto Serif Bengali\',\'Hind Siliguri\',serif;font-weight:400;line-height:1.9;color:#2a2a3e;">' +
                                 bodyHtml +
@@ -1595,7 +2001,7 @@
                 }
             },
 
-            /* ─── 7. IMAGE-FOCUSED ─── */
+            /* 7. IMAGE-FOCUSED */
             {
                 id: 'imagefocus',
                 name: 'Image Focus',
@@ -1610,14 +2016,12 @@
                         : 'background:linear-gradient(135deg,#2a2a3e 0%,#1a1a2e 50%,#0f0f1a 100%);';
 
                     return '<div class="card-canvas ' + lenClass + '" id="card-imagefocus" style="width:1200px;height:1200px;position:relative;' + bgStyle + '">' +
-                        /* Dark gradient overlay from bottom */
                         '<div style="position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.15) 65%, rgba(0,0,0,0.05) 100%);z-index:1;"></div>' +
                         '<div style="position:absolute;inset:0;background-image:' + TEXTURES.dotsDark + ';z-index:2;pointer-events:none;"></div>' +
-                        /* Badge */
-                        '<div style="position:absolute;top:40px;left:40px;z-index:3;">' +
+                        '<div style="position:absolute;top:40px;left:40px;right:40px;display:flex;align-items:center;justify-content:space-between;z-index:3;">' +
                             '<div style="background:' + ac + ';color:#fff;font-family:Inter,sans-serif;font-size:13px;font-weight:700;padding:6px 16px;border-radius:4px;letter-spacing:1px;">PHOTO NEWS</div>' +
+                            metaDateHtml(opts, false) +
                         '</div>' +
-                        /* Content at bottom */
                         '<div style="position:absolute;bottom:0;left:0;right:0;padding:0 60px 120px;z-index:3;">' +
                             '<div style="width:45px;height:4px;background:' + ac + ';border-radius:2px;margin-bottom:24px;"></div>' +
                             '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:48px;line-height:1.3;color:#fff;margin-bottom:16px;">' + processInline(headline) + '</div>' +
@@ -1625,7 +2029,6 @@
                                 bodyHtml +
                             '</div>' +
                         '</div>' +
-                        /* Footer */
                         '<div class="card-footer-bar footer-on-dark" style="z-index:3;">' +
                             '<div class="fl-divider" style="background:rgba(255,255,255,0.15);"></div>' +
                             '<img src="' + (opts.logoSrc || state.logoDataUrl || './bongo-shomachar.jpeg') + '" class="fl-logo" crossorigin="anonymous" />' +
@@ -1638,7 +2041,7 @@
                 }
             },
 
-            /* ─── 8. BOLD SOCIAL MEDIA ─── */
+            /* 8. BOLD SOCIAL */
             {
                 id: 'bold',
                 name: 'Bold Social',
@@ -1653,15 +2056,14 @@
 
                     return '<div class="card-canvas ' + lenClass + '" id="card-bold" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#ffffff;position:relative;overflow:hidden;">' +
                         bgLayers +
-                        /* Large accent block */
-                        '<div style="background:' + ac + ';padding:60px 60px 50px;flex-shrink:0;position:relative;z-index:2;">' +
+                        '<div style="background:' + ac + ';padding:50px 60px 45px;flex-shrink:0;position:relative;z-index:2;">' +
                             '<div style="position:absolute;inset:0;background-image:' + TEXTURES.diagDark + ';pointer-events:none;"></div>' +
-                            '<div style="position:absolute;top:-30px;right:-30px;width:150px;height:150px;background:rgba(255,255,255,0.08);border-radius:50%;"></div>' +
-                            '<div style="position:absolute;bottom:-20px;right:100px;width:80px;height:80px;background:rgba(255,255,255,0.05);border-radius:50%;"></div>' +
-                            '<div style="font-family:Inter,sans-serif;font-size:14px;font-weight:800;color:rgba(255,255,255,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;position:relative;">TRENDING NOW</div>' +
+                            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;position:relative;">' +
+                                '<div style="font-family:Inter,sans-serif;font-size:14px;font-weight:800;color:rgba(255,255,255,0.75);letter-spacing:3px;text-transform:uppercase;">TRENDING NOW</div>' +
+                                '<div style="color:rgba(255,255,255,0.85);font-size:15px;font-family:\'Hind Siliguri\',sans-serif;">' + (opts.date ? '📅 ' + opts.date : '') + (opts.time ? ' • ⏰ ' + opts.time : '') + '</div>' +
+                            '</div>' +
                             '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:52px;line-height:1.25;color:#fff;position:relative;">' + processInline(headline) + '</div>' +
                         '</div>' +
-                        /* Body on white */
                         '<div style="flex:1;padding:36px 60px 20px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;position:relative;z-index:2;">' +
                             '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-weight:400;line-height:1.7;color:#2a2a3e;">' +
                                 bodyHtml +
@@ -1672,7 +2074,7 @@
                 }
             },
 
-            /* ─── 9. DARK / DRAMATIC ─── */
+            /* 9. DARK / DRAMATIC */
             {
                 id: 'dark',
                 name: 'Dark Mode',
@@ -1687,23 +2089,19 @@
 
                     return '<div class="card-canvas ' + lenClass + '" id="card-dark" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#08080e;position:relative;">' +
                         bgLayers +
-                        /* Radial glow */
                         '<div style="position:absolute;top:50%;left:50%;width:800px;height:800px;transform:translate(-50%,-50%);background:radial-gradient(circle,' + hexToRgba(ac, 0.07) + ' 0%,transparent 70%);pointer-events:none;z-index:2;"></div>' +
                         '<div style="position:absolute;inset:0;background-image:' + TEXTURES.gridDark + ';z-index:2;pointer-events:none;"></div>' +
-                        /* Top accent line */
                         '<div style="height:3px;background:linear-gradient(90deg,transparent,' + ac + ',transparent);flex-shrink:0;position:relative;z-index:3;"></div>' +
-                        /* Label */
-                        '<div style="padding:48px 60px 0;flex-shrink:0;position:relative;z-index:3;">' +
+                        '<div style="padding:48px 60px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3;">' +
                             '<div style="display:inline-flex;align-items:center;gap:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:700;color:' + ac + ';letter-spacing:2px;text-transform:uppercase;">' +
                                 '<div style="width:8px;height:8px;background:' + ac + ';border-radius:50%;box-shadow:0 0 10px ' + ac + ';"></div>' +
                                 'EXCLUSIVE' +
                             '</div>' +
+                            metaDateHtml(opts, false) +
                         '</div>' +
-                        /* Heading */
                         '<div style="padding:28px 60px 0;position:relative;z-index:3;flex-shrink:0;">' +
                             '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:46px;line-height:1.35;color:#fff;padding-bottom:20px;border-bottom:1px solid ' + hexToRgba(ac, 0.2) + ';">' + processInline(headline) + '</div>' +
                         '</div>' +
-                        /* Body */
                         '<div style="flex:1;padding:24px 60px 20px;display:flex;flex-direction:column;justify-content:flex-start;overflow:hidden;position:relative;z-index:3;">' +
                             '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-weight:400;line-height:1.7;color:rgba(255,255,255,0.82);">' +
                                 bodyHtml.replace(/<strong>/g, '<strong style="color:' + ac + ';">') +
@@ -1714,7 +2112,7 @@
                 }
             },
 
-            /* ─── 10. CLEAN / PROFESSIONAL ─── */
+            /* 10. PROFESSIONAL */
             {
                 id: 'clean',
                 name: 'Professional',
@@ -1730,19 +2128,19 @@
                     return '<div class="card-canvas ' + lenClass + '" id="card-clean" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#f5f5f7;position:relative;">' +
                         bgLayers +
                         '<div style="position:absolute;inset:0;background-image:' + TEXTURES.diag + ';z-index:2;pointer-events:none;"></div>' +
-                        /* Clean header bar */
                         '<div style="padding:44px 60px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e0e0e5;position:relative;z-index:3;">' +
                             '<div style="display:flex;align-items:center;gap:14px;">' +
                                 '<img src="' + (opts.logoSrc || state.logoDataUrl || './bongo-shomachar.jpeg') + '" style="width:44px;height:44px;border-radius:10px;object-fit:cover;border:1.5px solid rgba(0,0,0,0.06);" crossorigin="anonymous" />' +
                                 '<span style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:22px;color:#1a1a2e;">' + opts.brandName + '</span>' +
                             '</div>' +
-                            '<div style="font-family:Inter,sans-serif;font-size:12px;font-weight:600;color:' + ac + ';letter-spacing:1px;text-transform:uppercase;border:1.5px solid ' + ac + ';padding:5px 14px;border-radius:4px;">NEWS</div>' +
+                            '<div style="display:flex;align-items:center;gap:16px;">' +
+                                metaDateHtml(opts, true) +
+                                '<div style="font-family:Inter,sans-serif;font-size:12px;font-weight:600;color:' + ac + ';letter-spacing:1px;text-transform:uppercase;border:1.5px solid ' + ac + ';padding:4px 12px;border-radius:4px;">NEWS</div>' +
+                            '</div>' +
                         '</div>' +
-                        /* Heading */
                         '<div style="padding:40px 60px 0;position:relative;z-index:3;flex-shrink:0;">' +
                             '<div style="font-family:\'Noto Serif Bengali\',\'Hind Siliguri\',serif;font-weight:700;font-size:44px;line-height:1.4;color:#1a1a2e;padding-bottom:24px;border-bottom:2px solid ' + hexToRgba(ac, 0.2) + ';">' + processInline(headline) + '</div>' +
                         '</div>' +
-                        /* Body */
                         '<div style="flex:1;padding:24px 60px 20px;overflow:hidden;display:flex;position:relative;z-index:3;">' +
                             '<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-start;">' +
                                 '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-weight:400;line-height:1.75;color:#3a3a52;">' +
@@ -1750,32 +2148,345 @@
                                 '</div>' +
                             '</div>' +
                         '</div>' +
-                        /* Footer with logo+motto */
-                        '<div style="padding:24px 60px;border-top:1px solid #e0e0e5;flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:12px;position:relative;z-index:3;">' +
-                            '<img src="' + (opts.logoSrc || state.logoDataUrl || './bongo-shomachar.jpeg') + '" style="width:30px;height:30px;border-radius:50%;object-fit:cover;" crossorigin="anonymous" />' +
-                            '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:16px;color:#666;">' + opts.motto + '</div>' +
-                        '</div>' +
+                        '<div style="position:relative;z-index:3;">' + footerHtml('footer-on-light', opts) + '</div>' +
                     '</div>';
                 }
             }
         ];
 
         /* ═══════════════════════════════════════════════
-           CARD GENERATION
+           INFOGRAPHIC CARD TEMPLATES (6 Variations)
+           ═══════════════════════════════════════════════ */
+        function renderTableHtml(data, theme, ac) {
+            if (!data || !data.headers || !data.headers.length) return '';
+            var isDark = theme === 'dark';
+            var thBg = isDark ? hexToRgba(ac, 0.25) : ac;
+            var thColor = '#ffffff';
+            var trBorder = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+            var trEvenBg = isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.015)';
+            var textColor = isDark ? 'rgba(255,255,255,0.9)' : '#2a2a3e';
+
+            var html = '<table style="width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.06);font-size:24px;font-family:\'Hind Siliguri\',sans-serif;">';
+            html += '<thead><tr style="background:' + thBg + ';color:' + thColor + ';">';
+            data.headers.forEach(function(h) {
+                html += '<th style="padding:18px 24px;text-align:left;font-weight:700;letter-spacing:0.5px;">' + h + '</th>';
+            });
+            html += '</tr></thead><tbody>';
+
+            data.rows.forEach(function(r, idx) {
+                var isHigh = data.highlights && data.highlights[idx];
+                var rowBg = isHigh
+                    ? (isDark ? 'linear-gradient(90deg, ' + hexToRgba(ac, 0.32) + ', ' + hexToRgba(ac, 0.12) + ')' : 'linear-gradient(90deg, ' + hexToRgba(ac, 0.16) + ', ' + hexToRgba(ac, 0.05) + ')')
+                    : (idx % 2 === 1 ? trEvenBg : 'transparent');
+                
+                var borderLeftStyle = isHigh ? 'border-left:6px solid ' + ac + ';' : '';
+                var rowTextColor = isHigh ? (isDark ? '#ffffff' : '#1a1a2e') : textColor;
+
+                html += '<tr style="background:' + rowBg + ';border-bottom:1px solid ' + trBorder + ';' + borderLeftStyle + 'color:' + rowTextColor + ';">';
+                data.headers.forEach(function(_, cIdx) {
+                    var cell = r[cIdx] !== undefined ? r[cIdx] : '';
+                    var isFirst = cIdx === 0;
+                    var fontWeight = (isHigh || isFirst) ? '700' : '400';
+                    var highlightIcon = (isHigh && isFirst) ? '<span style="display:inline-block;margin-right:8px;color:' + ac + ';font-size:20px;">★</span>' : '';
+                    html += '<td style="padding:16px 24px;font-weight:' + fontWeight + ';">' + highlightIcon + cell + '</td>';
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+            return html;
+        }
+
+        var INFOGRAPHIC_TEMPLATES = [
+            /* 1. DATA COMPARISON TABLE */
+            {
+                id: 'info-table',
+                name: 'Data Table',
+                nameBn: 'ইনফোগ্রাফিক টেবিল',
+                icon: '📊',
+                generate: function(headline, subtitle, tableData, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? bgImageLayer(opts.bgImage, 'background:linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.97))')
+                        : '';
+
+                    return '<div class="card-canvas" id="card-info-table" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#ffffff;position:relative;">' +
+                        bgLayers +
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.grid + ';z-index:2;pointer-events:none;"></div>' +
+                        '<div style="height:6px;background:' + ac + ';flex-shrink:0;position:relative;z-index:3;"></div>' +
+                        '<div style="padding:40px 60px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3;">' +
+                            '<div style="display:inline-flex;align-items:center;gap:8px;background:' + hexToRgba(ac, 0.12) + ';color:' + ac + ';font-size:16px;font-weight:700;padding:6px 18px;border-radius:20px;">' +
+                                '📊 ইনফোগ্রাফিক রিপোর্ট' +
+                            '</div>' +
+                            metaDateHtml(opts, true) +
+                        '</div>' +
+                        '<div style="padding:24px 60px 0;position:relative;z-index:3;flex-shrink:0;">' +
+                            '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:46px;line-height:1.3;color:#1a1a2e;">' + processInline(headline) + '</div>' +
+                            (subtitle ? '<div style="font-size:24px;color:#6b7280;margin-top:6px;line-height:1.4;">' + processInline(subtitle) + '</div>' : '') +
+                        '</div>' +
+                        '<div style="flex:1;padding:28px 60px 20px;overflow:hidden;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:3;">' +
+                            renderTableHtml(tableData, 'light', ac) +
+                        '</div>' +
+                        '<div style="position:relative;z-index:3;">' + footerHtml('footer-on-light', opts) + '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* 2. KPI / STAT METRICS GRID */
+            {
+                id: 'info-kpi',
+                name: 'Stat Grid',
+                nameBn: 'পরিসংখ্যান গ্রিড',
+                icon: '🔢',
+                generate: function(headline, subtitle, tableData, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? bgImageLayer(opts.bgImage, 'background:linear-gradient(135deg, rgba(10,10,18,0.9), rgba(15,15,26,0.95))')
+                        : '';
+
+                    var count = (tableData.rows && tableData.rows.length) ? tableData.rows.length : 1;
+                    var cols = count <= 4 ? 2 : (count <= 9 ? 3 : 4);
+                    var gap = count <= 4 ? '20px' : (count <= 6 ? '16px' : (count <= 9 ? '12px' : '10px'));
+                    var pad = count <= 4 ? '24px 28px' : (count <= 6 ? '18px 20px' : (count <= 9 ? '14px 16px' : '10px 14px'));
+                    var titleFs = count <= 4 ? '24px' : (count <= 6 ? '20px' : (count <= 9 ? '17px' : '15px'));
+                    var val1Fs = count <= 4 ? '42px' : (count <= 6 ? '34px' : (count <= 9 ? '28px' : '22px'));
+                    var val2Fs = count <= 4 ? '20px' : (count <= 6 ? '16px' : (count <= 9 ? '14px' : '12px'));
+
+                    var kpiCardsHtml = '<div style="display:grid;grid-template-columns:repeat(' + cols + ', 1fr);gap:' + gap + ';width:100%;align-content:center;">';
+                    tableData.rows.forEach(function(r, idx) {
+                        var title = r[0] || '';
+                        var val1 = r[1] || '';
+                        var val2 = r[2] || '';
+                        var isHigh = tableData.highlights && tableData.highlights[idx];
+
+                        var cardBg = isHigh
+                            ? 'background:linear-gradient(135deg, ' + hexToRgba(ac, 0.25) + ', rgba(255,255,255,0.06));border:2px solid ' + ac + ';box-shadow:0 0 25px ' + hexToRgba(ac, 0.3) + ';'
+                            : 'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);';
+
+                        kpiCardsHtml += '<div style="' + cardBg + 'border-radius:14px;padding:' + pad + ';position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;">' +
+                            '<div style="position:absolute;top:0;left:0;right:0;height:3px;background:' + ac + ';"></div>' +
+                            (isHigh ? '<div style="position:absolute;top:6px;right:10px;background:' + ac + ';color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:8px;">★ বিশেষ</div>' : '') +
+                            '<div style="font-size:' + titleFs + ';color:rgba(255,255,255,0.75);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + title + '</div>' +
+                            '<div style="font-size:' + val1Fs + ';font-weight:700;color:' + ac + ';line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + val1 + '</div>' +
+                            (val2 ? '<div style="font-size:' + val2Fs + ';color:rgba(255,255,255,0.85);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + val2 + '</div>' : '') +
+                        '</div>';
+                    });
+                    kpiCardsHtml += '</div>';
+
+                    return '<div class="card-canvas" id="card-info-kpi" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#0c0c14;position:relative;">' +
+                        bgLayers +
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.gridDark + ';z-index:2;pointer-events:none;"></div>' +
+                        '<div style="padding:44px 60px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3;">' +
+                            '<div style="display:inline-flex;align-items:center;gap:8px;background:' + ac + ';color:#fff;font-size:16px;font-weight:700;padding:6px 18px;border-radius:6px;letter-spacing:1px;text-transform:uppercase;">' +
+                                'KEY METRICS' +
+                            '</div>' +
+                            metaDateHtml(opts, false) +
+                        '</div>' +
+                        '<div style="padding:28px 60px 0;position:relative;z-index:3;flex-shrink:0;">' +
+                            '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:46px;line-height:1.3;color:#fff;">' + processInline(headline) + '</div>' +
+                            (subtitle ? '<div style="font-size:24px;color:rgba(255,255,255,0.65);margin-top:6px;">' + processInline(subtitle) + '</div>' : '') +
+                        '</div>' +
+                        '<div style="flex:1;padding:28px 60px 20px;overflow:hidden;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:3;">' +
+                            kpiCardsHtml +
+                        '</div>' +
+                        '<div style="position:relative;z-index:3;">' + footerHtml('footer-on-dark', opts) + '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* 3. TIMELINE & LIST INFOGRAPHIC */
+            {
+                id: 'info-timeline',
+                name: 'Timeline / List',
+                nameBn: 'সময়রেখা তালিকা',
+                icon: '🗓️',
+                generate: function(headline, subtitle, tableData, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? bgImageLayer(opts.bgImage, 'background:linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.97))')
+                        : '';
+
+                    var count = (tableData.rows && tableData.rows.length) ? tableData.rows.length : 1;
+                    var isGrid = count > 5;
+                    var gap = count <= 4 ? '16px' : (count <= 6 ? '12px' : '10px');
+                    var pad = count <= 4 ? '18px 24px' : (count <= 6 ? '12px 18px' : (count <= 8 ? '10px 16px' : '8px 14px'));
+                    var badgeSize = count <= 4 ? '46px' : (count <= 6 ? '38px' : (count <= 8 ? '32px' : '28px'));
+                    var badgeFs = count <= 4 ? '22px' : (count <= 6 ? '18px' : (count <= 8 ? '15px' : '13px'));
+                    var titleFs = count <= 4 ? '26px' : (count <= 6 ? '21px' : (count <= 8 ? '18px' : '16px'));
+                    var subFs = count <= 4 ? '20px' : (count <= 6 ? '16px' : (count <= 8 ? '14px' : '12px'));
+
+                    var containerStyle = isGrid
+                        ? 'display:grid;grid-template-columns:1fr 1fr;gap:' + gap + ';width:100%;'
+                        : 'display:flex;flex-direction:column;gap:' + gap + ';width:100%;';
+
+                    var listItemsHtml = '<div style="' + containerStyle + '">';
+                    tableData.rows.forEach(function(r, idx) {
+                        var title = r[0] || '';
+                        var val1 = r[1] || '';
+                        var val2 = r[2] || '';
+                        var isHigh = tableData.highlights && tableData.highlights[idx];
+
+                        var itemBg = isHigh
+                            ? 'background:linear-gradient(90deg, ' + hexToRgba(ac, 0.12) + ', #ffffff);border:2px solid ' + ac + ';box-shadow:0 4px 18px ' + hexToRgba(ac, 0.15) + ';'
+                            : 'background:#fff;border:1px solid rgba(0,0,0,0.06);box-shadow:0 2px 12px rgba(0,0,0,0.04);';
+
+                        listItemsHtml += '<div style="display:flex;align-items:center;' + itemBg + 'border-radius:12px;padding:' + pad + ';position:relative;overflow:hidden;">' +
+                            '<div style="width:' + badgeSize + ';height:' + badgeSize + ';background:' + ac + ';color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:' + badgeFs + ';font-weight:700;margin-right:' + (count > 6 ? '12px' : '16px') + ';flex-shrink:0;">' +
+                                (isHigh ? '★' : toBanglaNumber(idx + 1)) +
+                            '</div>' +
+                            '<div style="flex:1;min-width:0;">' +
+                                '<div style="font-size:' + titleFs + ';font-weight:700;color:#1a1a2e;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + title + (isHigh ? ' <span style="font-size:12px;color:' + ac + ';font-weight:600;">(শীর্ষ)</span>' : '') + '</div>' +
+                                (val1 ? '<div style="font-size:' + subFs + ';color:#555;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + val1 + (val2 ? ' • ' + val2 : '') + '</div>' : '') +
+                            '</div>' +
+                        '</div>';
+                    });
+                    listItemsHtml += '</div>';
+
+                    return '<div class="card-canvas" id="card-info-timeline" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#f8f9fa;position:relative;">' +
+                        bgLayers +
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.dots + ';z-index:2;pointer-events:none;"></div>' +
+                        '<div style="padding:44px 60px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3;">' +
+                            '<div style="font-family:Inter,sans-serif;font-size:14px;font-weight:700;color:' + ac + ';letter-spacing:2px;text-transform:uppercase;">INFOGRAPHIC SUMMARY</div>' +
+                            metaDateHtml(opts, true) +
+                        '</div>' +
+                        '<div style="padding:24px 60px 0;position:relative;z-index:3;flex-shrink:0;">' +
+                            '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:44px;line-height:1.3;color:#1a1a2e;">' + processInline(headline) + '</div>' +
+                            (subtitle ? '<div style="font-size:22px;color:#6b7280;margin-top:4px;">' + processInline(subtitle) + '</div>' : '') +
+                        '</div>' +
+                        '<div style="flex:1;padding:24px 60px 20px;overflow:hidden;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:3;">' +
+                            listItemsHtml +
+                        '</div>' +
+                        '<div style="position:relative;z-index:3;">' + footerHtml('footer-on-light', opts) + '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* 4. DARK INFOGRAPHIC TABLE */
+            {
+                id: 'info-dark',
+                name: 'Dark Table',
+                nameBn: 'ডার্ক ইনফোগ্রাফিক',
+                icon: '🌙',
+                generate: function(headline, subtitle, tableData, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? bgImageLayer(opts.bgImage, 'background:linear-gradient(160deg, rgba(8,8,14,0.88), rgba(8,8,14,0.94))')
+                        : '';
+
+                    return '<div class="card-canvas" id="card-info-dark" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#08080e;position:relative;">' +
+                        bgLayers +
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.diagDark + ';z-index:2;pointer-events:none;"></div>' +
+                        '<div style="height:3px;background:linear-gradient(90deg,transparent,' + ac + ',transparent);flex-shrink:0;position:relative;z-index:3;"></div>' +
+                        '<div style="padding:44px 60px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3;">' +
+                            '<div style="display:inline-flex;align-items:center;gap:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:700;color:' + ac + ';letter-spacing:2px;text-transform:uppercase;">' +
+                                '<div style="width:8px;height:8px;background:' + ac + ';border-radius:50%;box-shadow:0 0 10px ' + ac + ';"></div>' +
+                                'DATA SPOTLIGHT' +
+                            '</div>' +
+                            metaDateHtml(opts, false) +
+                        '</div>' +
+                        '<div style="padding:24px 60px 0;position:relative;z-index:3;flex-shrink:0;">' +
+                            '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:46px;line-height:1.3;color:#fff;">' + processInline(headline) + '</div>' +
+                            (subtitle ? '<div style="font-size:22px;color:rgba(255,255,255,0.65);margin-top:4px;">' + processInline(subtitle) + '</div>' : '') +
+                        '</div>' +
+                        '<div style="flex:1;padding:24px 60px 20px;overflow:hidden;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:3;">' +
+                            renderTableHtml(tableData, 'dark', ac) +
+                        '</div>' +
+                        '<div style="position:relative;z-index:3;">' + footerHtml('footer-on-dark', opts) + '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* 5. BOLD SOCIAL INFOGRAPHIC */
+            {
+                id: 'info-bold',
+                name: 'Bold Infographic',
+                nameBn: 'বোল্ড ইনফোগ্রাফিক',
+                icon: '🔥',
+                generate: function(headline, subtitle, tableData, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? '<div style="position:absolute;inset:0;background-image:url(' + opts.bgImage + ');background-size:cover;background-position:center;z-index:0;opacity:0.12;"></div>'
+                        : '';
+
+                    return '<div class="card-canvas" id="card-info-bold" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#ffffff;position:relative;overflow:hidden;">' +
+                        bgLayers +
+                        '<div style="background:' + ac + ';padding:44px 60px 36px;flex-shrink:0;position:relative;z-index:2;">' +
+                            '<div style="position:absolute;inset:0;background-image:' + TEXTURES.diagDark + ';pointer-events:none;"></div>' +
+                            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;position:relative;">' +
+                                '<div style="font-family:Inter,sans-serif;font-size:13px;font-weight:800;color:rgba(255,255,255,0.8);letter-spacing:3px;text-transform:uppercase;">INFOGRAPHICS</div>' +
+                                '<div style="color:rgba(255,255,255,0.9);font-size:15px;font-family:\'Hind Siliguri\',sans-serif;">' + (opts.date ? '📅 ' + opts.date : '') + (opts.time ? ' • ⏰ ' + opts.time : '') + '</div>' +
+                            '</div>' +
+                            '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:48px;line-height:1.25;color:#fff;position:relative;">' + processInline(headline) + '</div>' +
+                        '</div>' +
+                        '<div style="flex:1;padding:28px 60px 20px;overflow:hidden;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2;">' +
+                            renderTableHtml(tableData, 'light', ac) +
+                        '</div>' +
+                        '<div style="position:relative;z-index:2;">' + footerHtml('footer-on-light', opts) + '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* 6. CLEAN PROFESSIONAL REPORT */
+            {
+                id: 'info-clean',
+                name: 'Pro Data Report',
+                nameBn: 'পেশাদার ডাটা রিপোর্ট',
+                icon: '🏢',
+                generate: function(headline, subtitle, tableData, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? bgImageLayer(opts.bgImage, 'background:rgba(245,245,247,0.94)')
+                        : '';
+
+                    return '<div class="card-canvas" id="card-info-clean" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#f5f5f7;position:relative;">' +
+                        bgLayers +
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.diag + ';z-index:2;pointer-events:none;"></div>' +
+                        '<div style="padding:40px 60px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e0e0e5;position:relative;z-index:3;">' +
+                            '<div style="display:flex;align-items:center;gap:14px;">' +
+                                '<img src="' + (opts.logoSrc || state.logoDataUrl || './bongo-shomachar.jpeg') + '" style="width:42px;height:42px;border-radius:10px;object-fit:cover;border:1.5px solid rgba(0,0,0,0.06);" crossorigin="anonymous" />' +
+                                '<span style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:22px;color:#1a1a2e;">' + opts.brandName + '</span>' +
+                            '</div>' +
+                            '<div style="display:flex;align-items:center;gap:16px;">' +
+                                metaDateHtml(opts, true) +
+                                '<div style="font-family:Inter,sans-serif;font-size:12px;font-weight:600;color:' + ac + ';letter-spacing:1px;text-transform:uppercase;border:1.5px solid ' + ac + ';padding:4px 12px;border-radius:4px;">REPORT</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div style="padding:32px 60px 0;position:relative;z-index:3;flex-shrink:0;">' +
+                            '<div style="font-family:\'Noto Serif Bengali\',\'Hind Siliguri\',serif;font-weight:700;font-size:42px;line-height:1.35;color:#1a1a2e;">' + processInline(headline) + '</div>' +
+                            (subtitle ? '<div style="font-size:22px;color:#666;margin-top:4px;">' + processInline(subtitle) + '</div>' : '') +
+                        '</div>' +
+                        '<div style="flex:1;padding:24px 60px 20px;overflow:hidden;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:3;">' +
+                            renderTableHtml(tableData, 'light', ac) +
+                        '</div>' +
+                        '<div style="position:relative;z-index:3;">' + footerHtml('footer-on-light', opts) + '</div>' +
+                    '</div>';
+                }
+            }
+        ];
+
+        /* ═══════════════════════════════════════════════
+           CARD GENERATION ROUTER
            ═══════════════════════════════════════════════ */
         function generateAllCards() {
-            var headlineText = headlineInput.value.trim();
-            var bodyText = textarea.value.trim();
+            var isNews = state.mode === 'news';
 
-            if (!headlineText && !bodyText) {
-                showToast('⚠️ Please enter a headline or body content.', 'warning');
-                headlineInput.focus();
-                return;
+            if (isNews) {
+                var headlineText = headlineInput.value.trim();
+                var bodyText = textarea.value.trim();
+
+                if (!headlineText && !bodyText) {
+                    showToast('⚠️ Please enter a headline or body content.', 'warning');
+                    headlineInput.focus();
+                    return;
+                }
+            } else {
+                var infoHeadline = infoHeadlineInput.value.trim();
+                if (!infoHeadline && (!state.tableData || !state.tableData.rows.length)) {
+                    showToast('⚠️ Please enter an infographic headline and table data.', 'warning');
+                    infoHeadlineInput.focus();
+                    return;
+                }
             }
-
-            // Use headlineInput as primary headline, textarea as body
-            var headline = headlineText || 'শিরোনাম';
-            var bodyHtml = parseText(bodyText);
 
             btnGenerate.innerHTML = '<span class="spinner"></span> Generating...';
             btnGenerate.classList.add('loading');
@@ -1786,26 +2497,40 @@
                     bgImage: state.bgImageDataUrl,
                     logoSrc: state.logoDataUrl || './bongo-shomachar.jpeg',
                     brandName: state.brandName,
-                    motto: state.motto
+                    motto: state.motto,
+                    date: state.date,
+                    time: state.time,
+                    source: state.source
                 };
 
                 galleryGrid.innerHTML = '';
 
-                // Initialize toggles — all ON by default if bg image exists
-                TEMPLATES.forEach(function(tmpl) {
+                var activeTemplates = isNews ? NEWS_TEMPLATES : INFOGRAPHIC_TEMPLATES;
+
+                activeTemplates.forEach(function(tmpl) {
                     if (state.imageToggles[tmpl.id] === undefined) {
                         state.imageToggles[tmpl.id] = true;
                     }
                 });
 
-                TEMPLATES.forEach(function(tmpl, index) {
+                activeTemplates.forEach(function(tmpl, index) {
                     var useBg = state.imageToggles[tmpl.id] !== false;
-                    var cardHtml = tmpl.generate(headline, bodyHtml, opts, useBg);
+                    var cardHtml = '';
+
+                    if (isNews) {
+                        var headline = headlineInput.value.trim() || 'শিরোনাম';
+                        var bodyHtml = parseText(textarea.value.trim());
+                        cardHtml = tmpl.generate(headline, bodyHtml, opts, useBg);
+                    } else {
+                        var infoHeadline = infoHeadlineInput.value.trim() || 'ইনফোগ্রাফিক রিপোর্ট';
+                        var infoSubtitle = infoSubtitleInput.value.trim();
+                        cardHtml = tmpl.generate(infoHeadline, infoSubtitle, state.tableData, opts, useBg);
+                    }
 
                     var wrapper = document.createElement('div');
                     wrapper.className = 'gallery-card';
                     wrapper.id = 'wrapper-' + tmpl.id;
-                    wrapper.style.animationDelay = (index * 70) + 'ms';
+                    wrapper.style.animationDelay = (index * 60) + 'ms';
 
                     var hasBg = !!opts.bgImage;
 
@@ -1834,6 +2559,7 @@
 
                 emptyState.style.display = 'none';
                 galleryGrid.style.display = 'grid';
+                cardCountBadge.textContent = activeTemplates.length + ' designs';
                 cardCountBadge.classList.add('visible');
 
                 requestAnimationFrame(function() {
@@ -1842,32 +2568,44 @@
 
                 btnGenerate.innerHTML = '✨ Generate All Cards';
                 btnGenerate.classList.remove('loading');
-                showToast('✅ 10 card variations generated!', 'success');
+                showToast('✅ ' + activeTemplates.length + ' card variations generated!', 'success');
             }, 300);
         }
 
         window.generateAllCards = generateAllCards;
 
         /* ═══════════════════════════════════════════════
-           TOGGLE CARD IMAGE (per-card checkbox)
+           TOGGLE CARD IMAGE
            ═══════════════════════════════════════════════ */
         function toggleCardImage(templateId, checked) {
             state.imageToggles[templateId] = checked;
-            // Regenerate just this one card
-            var tmpl = TEMPLATES.find(function(t) { return t.id === templateId; });
+            var isNews = state.mode === 'news';
+            var activeTemplates = isNews ? NEWS_TEMPLATES : INFOGRAPHIC_TEMPLATES;
+            var tmpl = activeTemplates.find(function(t) { return t.id === templateId; });
             if (!tmpl) return;
 
-            var headlineText = headlineInput.value.trim() || 'শিরোনাম';
-            var bodyHtml = parseText(textarea.value.trim());
             var opts = {
                 accentColor: state.accentColor,
                 bgImage: state.bgImageDataUrl,
                 logoSrc: state.logoDataUrl || './bongo-shomachar.jpeg',
                 brandName: state.brandName,
-                motto: state.motto
+                motto: state.motto,
+                date: state.date,
+                time: state.time,
+                source: state.source
             };
 
-            var cardHtml = tmpl.generate(headlineText, bodyHtml, opts, checked);
+            var cardHtml = '';
+            if (isNews) {
+                var headline = headlineInput.value.trim() || 'শিরোনাম';
+                var bodyHtml = parseText(textarea.value.trim());
+                cardHtml = tmpl.generate(headline, bodyHtml, opts, checked);
+            } else {
+                var infoHeadline = infoHeadlineInput.value.trim() || 'ইনফোগ্রাফিক রিপোর্ট';
+                var infoSubtitle = infoSubtitleInput.value.trim();
+                cardHtml = tmpl.generate(infoHeadline, infoSubtitle, state.tableData, opts, checked);
+            }
+
             var wrapper = document.getElementById('wrapper-' + templateId);
             if (wrapper) {
                 var scaleWrap = wrapper.querySelector('.card-scale-wrapper');
@@ -1877,7 +2615,6 @@
                 }
             }
         }
-
         window.toggleCardImage = toggleCardImage;
 
         /* ═══════════════════════════════════════════════
@@ -1949,7 +2686,6 @@
                 showToast('❌ Download failed. Try again.', 'error');
             });
         }
-
         window.downloadCard = downloadCard;
 
         function downloadAllCards() {
@@ -1959,15 +2695,18 @@
                 return;
             }
 
-            showToast('📥 Downloading all 10 cards...', 'info');
+            showToast('📥 Downloading all cards...', 'info');
 
+            var isNews = state.mode === 'news';
+            var activeTemplates = isNews ? NEWS_TEMPLATES : INFOGRAPHIC_TEMPLATES;
             var index = 0;
+
             function downloadNext() {
-                if (index >= TEMPLATES.length) {
+                if (index >= activeTemplates.length) {
                     showToast('✅ All cards downloaded!', 'success');
                     return;
                 }
-                var tmpl = TEMPLATES[index];
+                var tmpl = activeTemplates[index];
                 var cardEl = document.getElementById('card-' + tmpl.id);
                 if (!cardEl) { index++; downloadNext(); return; }
 
@@ -2001,7 +2740,6 @@
             }
             downloadNext();
         }
-
         window.downloadAllCards = downloadAllCards;
 
         /* ═══════════════════════════════════════════════
@@ -2030,7 +2768,6 @@
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
-
         window.openPreview = openPreview;
 
         function closePreview() {
@@ -2038,7 +2775,6 @@
             document.body.style.overflow = '';
             state.currentPreviewId = null;
         }
-
         window.closePreview = closePreview;
 
         document.addEventListener('keydown', function(e) {
@@ -2152,7 +2888,7 @@
                     var zone2 = document.getElementById('logoUploadZone');
                     zone2.classList.add('has-image');
                     zone2.innerHTML =
-                        '<img src="' + dataUrl + '" class="upload-preview-img" style="height:80px;object-fit:contain;padding:8px;" />' +
+                        '<img src="' + dataUrl + '" class="upload-preview-img" style="height:70px;object-fit:contain;padding:6px;" />' +
                         '<button class="upload-remove" onclick="removeLogoImage(event)">✕</button>';
                     zone2.onclick = null;
                     document.getElementById('sidebarLogo').src = dataUrl;
@@ -2169,7 +2905,7 @@
             zone.classList.remove('has-image');
             zone.innerHTML =
                 '<span class="upload-icon">📷</span>' +
-                '<div class="upload-text">Drop image or <span>click to upload</span></div>';
+                '<div class="upload-text">ছবি ড্রপ করুন বা <span>ক্লিক করে আপলোড</span></div>';
             zone.onclick = function() { document.getElementById('bgFileInput').click(); };
         }
         window.removeBgImage = removeBgImage;
@@ -2180,14 +2916,14 @@
             loadDefaultLogo();
             var zone = document.getElementById('logoUploadZone');
             zone.classList.remove('has-image');
-            zone.innerHTML = '<div class="upload-text">Click to replace default logo</div>';
+            zone.innerHTML = '<div class="upload-text">ডিফল্ট লোগো পরিবর্তন করতে ক্লিক করুন</div>';
             zone.onclick = function() { document.getElementById('logoFileInput').click(); };
             document.getElementById('sidebarLogo').src = './bongo-shomachar.jpeg';
         }
         window.removeLogoImage = removeLogoImage;
 
         /* ═══════════════════════════════════════════════
-           TEXT INPUT HANDLERS
+           INPUT LISTENERS
            ═══════════════════════════════════════════════ */
         textarea.addEventListener('input', function() {
             charCount.textContent = (headlineInput.value.length + textarea.value.length) + ' characters';
@@ -2209,6 +2945,7 @@
            ═══════════════════════════════════════════════ */
         setupColorPalette();
         setupFileUploads();
+        renderMiniBuilderTable();
 
     })();
     </script>
