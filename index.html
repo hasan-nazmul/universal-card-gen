@@ -748,6 +748,65 @@
             background: rgba(220, 38, 38, 0.08);
         }
 
+        /* ── BG Opacity Slider ── */
+        .bg-opacity-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 4px 2px;
+        }
+        .bg-opacity-row .opacity-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            white-space: nowrap;
+            min-width: 62px;
+            letter-spacing: 0.3px;
+        }
+        .bg-opacity-row .opacity-val {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            min-width: 32px;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+        .bg-opacity-row input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            flex: 1;
+            height: 5px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--sidebar-border) 100%);
+            outline: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .bg-opacity-row input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid #fff;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.25);
+            cursor: grab;
+            transition: transform 0.15s;
+        }
+        .bg-opacity-row input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+        .bg-opacity-row input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid #fff;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.25);
+            cursor: grab;
+        }
+
         /* ═══════════════════════════════════════════════
            5. PREVIEW MODAL
            ═══════════════════════════════════════════════ */
@@ -1293,7 +1352,7 @@
     <main id="mainArea">
         <div class="main-header">
             <h2 id="galleryHeading">Card Variations</h2>
-            <span class="card-count-badge" id="cardCountBadge">10 designs</span>
+            <span class="card-count-badge" id="cardCountBadge">14 designs</span>
         </div>
 
         <!-- Empty State -->
@@ -1625,7 +1684,7 @@
         function bgImageLayer(bgImage, overlayGradient) {
             if (!bgImage) return '';
             return '<div style="position:absolute;inset:0;background-image:url(' + bgImage + ');background-size:cover;background-position:center;z-index:0;"></div>' +
-                   '<div style="position:absolute;inset:0;' + overlayGradient + ';z-index:1;"></div>';
+                   '<div data-bg-overlay="1" style="position:absolute;inset:0;' + overlayGradient + ';z-index:1;"></div>';
         }
 
         /* ═══════════════════════════════════════════════
@@ -1777,7 +1836,7 @@
         window.loadSampleData = loadSampleData;
 
         /* ═══════════════════════════════════════════════
-           NEWS CARD TEMPLATES (10 Variations)
+           NEWS CARD TEMPLATES (14 Variations)
            ═══════════════════════════════════════════════ */
         var NEWS_TEMPLATES = [
             /* 1. BREAKING */
@@ -2121,7 +2180,7 @@
                 generate: function(headline, bodyHtml, opts, useBg) {
                     var ac = opts.accentColor;
                     var bgLayers = useBg && opts.bgImage
-                        ? bgImageLayer(opts.bgImage, 'background:rgba(245,245,247,0.94)')
+                        ? bgImageLayer(opts.bgImage, 'background:rgba(245,245,247,0.60)')
                         : '';
                     var lenClass = getTextLengthClass(headline + bodyHtml);
 
@@ -2151,11 +2210,204 @@
                         '<div style="position:relative;z-index:3;">' + footerHtml('footer-on-light', opts) + '</div>' +
                     '</div>';
                 }
+            },
+
+            /* 11. ASYMMETRIC SPLIT */
+            {
+                id: 'asymmetric',
+                name: 'Asymmetric Split',
+                nameBn: 'অপ্রতিসম স্প্লিট',
+                icon: '📐',
+                generate: function(headline, bodyHtml, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var lenClass = getTextLengthClass(headline + bodyHtml);
+                    var hasBg = useBg && opts.bgImage;
+                    var rightBg = hasBg
+                        ? 'background-image:url(' + opts.bgImage + ');background-size:cover;background-position:center;'
+                        : 'background:linear-gradient(145deg, #1e1e2c 0%, #28283c 100%);';
+
+                    return '<div class="card-canvas ' + lenClass + '" id="card-asymmetric" style="width:1200px;height:1200px;display:flex;background:#0d0d15;position:relative;overflow:hidden;">' +
+                        /* Left dark editorial column (56%) — content centered, footer at bottom */
+                        '<div style="width:56%;height:100%;background:#101018;padding:52px 48px 44px 54px;display:flex;flex-direction:column;justify-content:space-between;position:relative;z-index:3;border-right:1px solid rgba(255,255,255,0.08);">' +
+                            '<div style="flex:1;display:flex;flex-direction:column;justify-content:center;">' +
+                                '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">' +
+                                    '<div style="display:inline-flex;align-items:center;gap:8px;background:' + hexToRgba(ac, 0.18) + ';border:1px solid ' + hexToRgba(ac, 0.35) + ';color:' + ac + ';font-family:Inter,sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:6px 14px;border-radius:4px;">⚡ ব্রেকিং · BREAKING</div>' +
+                                    '<div style="width:40px;height:2px;background:' + hexToRgba(ac, 0.4) + ';"></div>' +
+                                '</div>' +
+                                '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:46px;font-weight:700;line-height:1.25;color:#ffffff;letter-spacing:-0.3px;margin-bottom:20px;word-break:break-word;">' + processInline(headline) + '</div>' +
+                                '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-size:24px;line-height:1.65;color:rgba(255,255,255,0.85);max-height:380px;overflow:hidden;">' +
+                                    bodyHtml +
+                                '</div>' +
+                            '</div>' +
+                            /* Bottom branding bar */
+                            '<div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">' +
+                                '<div style="display:flex;align-items:center;gap:12px;">' +
+                                    '<img src="' + (opts.logoSrc || state.logoDataUrl || './bongo-shomachar.jpeg') + '" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(255,255,255,0.2);" crossorigin="anonymous" />' +
+                                    '<div>' +
+                                        '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:18px;font-weight:700;color:#ffffff;line-height:1.2;">' + opts.brandName + '</div>' +
+                                        '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.2;">' + opts.motto + '</div>' +
+                                    '</div>' +
+                                '</div>' +
+                                (opts.source ? '<div style="font-size:12px;color:' + ac + ';background:rgba(255,255,255,0.06);padding:4px 10px;border-radius:12px;border:1px solid ' + hexToRgba(ac, 0.3) + ';">📌 ' + opts.source + '</div>' : '') +
+                            '</div>' +
+                        '</div>' +
+                        /* Right visual/image column (44%) */
+                        '<div style="width:44%;height:100%;position:relative;overflow:hidden;' + rightBg + '">' +
+                            '<div data-bg-overlay="1" style="position:absolute;inset:0;background:' + (hasBg ? 'linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%)' : 'none') + ';z-index:1;"></div>' +
+                            (!hasBg ? '<div style="position:absolute;inset:0;background-image:' + TEXTURES.diagDark + ';z-index:1;pointer-events:none;"></div>' : '') +
+                            '<div style="position:absolute;top:44px;right:44px;z-index:2;">' + metaDateHtml(opts, false) + '</div>' +
+                        '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* 12. MONUMENTAL TYPE */
+            {
+                id: 'monumental',
+                name: 'Monumental Type',
+                nameBn: 'মনুমেন্টাল টাইপ',
+                icon: '🏛️',
+                generate: function(headline, bodyHtml, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? bgImageLayer(opts.bgImage, 'background:linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.65) 100%)')
+                        : '';
+                    var lenClass = getTextLengthClass(headline + bodyHtml);
+
+                    return '<div class="card-canvas ' + lenClass + '" id="card-monumental" style="width:1200px;height:1200px;display:flex;flex-direction:column;justify-content:space-between;background:#ffffff;padding:60px 72px 48px 84px;position:relative;overflow:hidden;">' +
+                        bgLayers +
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.grid + ';z-index:2;pointer-events:none;"></div>' +
+                        /* 12px solid left accent border bar */
+                        '<div style="position:absolute;top:0;left:0;bottom:0;width:12px;background:' + ac + ';z-index:3;"></div>' +
+                        /* Header top row */
+                        '<div style="display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:relative;z-index:3;">' +
+                            '<div style="font-family:Inter,sans-serif;font-size:14px;font-weight:800;letter-spacing:2.5px;color:' + ac + ';text-transform:uppercase;">EDITORIAL OPINION · বিশেষ দৃষ্টিভঙ্গি</div>' +
+                            metaDateHtml(opts, true) +
+                        '</div>' +
+                        /* Monumental headline & content */
+                        '<div style="flex:1;display:flex;flex-direction:column;justify-content:center;margin:32px 0 24px;position:relative;z-index:3;overflow:hidden;">' +
+                            '<div style="font-family:\'Noto Serif Bengali\',\'Hind Siliguri\',serif;font-size:56px;font-weight:800;line-height:1.16;letter-spacing:-0.5px;color:#111116;margin-bottom:24px;word-break:break-word;">' + processInline(headline) + '</div>' +
+                            '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-size:26px;line-height:1.7;color:#333346;border-left:4px solid ' + hexToRgba(ac, 0.25) + ';padding-left:24px;max-height:460px;overflow:hidden;">' +
+                                bodyHtml +
+                            '</div>' +
+                        '</div>' +
+                        /* Distinctive editorial footer */
+                        '<div style="display:flex;align-items:center;justify-content:space-between;border-top:2px solid #eaebf0;padding-top:24px;flex-shrink:0;position:relative;z-index:3;">' +
+                            '<div style="display:flex;align-items:center;gap:16px;">' +
+                                '<img src="' + (opts.logoSrc || state.logoDataUrl || './bongo-shomachar.jpeg') + '" style="width:48px;height:48px;border-radius:10px;object-fit:cover;border:1.5px solid #e0e0e5;" crossorigin="anonymous" />' +
+                                '<div>' +
+                                    '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:22px;font-weight:700;color:#111116;line-height:1.2;">' + opts.brandName + '</div>' +
+                                    '<div style="font-size:14px;color:#6b7280;line-height:1.2;">' + opts.motto + '</div>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div style="display:flex;align-items:center;gap:14px;">' +
+                                (opts.source ? '<div class="fl-source-badge" style="background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;">📌 ' + opts.source + '</div>' : '') +
+                                '<div style="background:' + ac + ';color:#ffffff;font-family:\'Hind Siliguri\',Inter,sans-serif;font-size:15px;font-weight:700;padding:10px 24px;border-radius:6px;box-shadow:0 4px 14px ' + hexToRgba(ac, 0.25) + ';">বিস্তারিত পড়ুন →</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* 13. DIAGONAL SLICE */
+            {
+                id: 'diagonal',
+                name: 'Diagonal Slice',
+                nameBn: 'ডায়াগোনাল স্লাইস',
+                icon: '⚡',
+                generate: function(headline, bodyHtml, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var lenClass = getTextLengthClass(headline + bodyHtml);
+                    var hasBg = useBg && opts.bgImage;
+                    var topBg = hasBg
+                        ? 'background-image:url(' + opts.bgImage + ');background-size:cover;background-position:center;'
+                        : 'background:linear-gradient(135deg, #1a1a2b 0%, #2c2d42 50%, ' + hexToRgba(ac, 0.7) + ' 100%);';
+
+                    return '<div class="card-canvas ' + lenClass + '" id="card-diagonal" style="width:1200px;height:1200px;position:relative;overflow:hidden;background:#09090f;">' +
+                        /* Top sliced media area (50% height) — shorter to push title below */
+                        '<div style="position:absolute;top:0;left:0;width:100%;height:50%;' + topBg + 'clip-path:polygon(0 0, 100% 0, 100% 80%, 0 100%);z-index:1;">' +
+                            '<div data-bg-overlay="1" style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 100%);"></div>' +
+                            (!hasBg ? '<div style="position:absolute;inset:0;background-image:' + TEXTURES.diagDark + ';pointer-events:none;"></div>' : '') +
+                            '<div style="position:absolute;top:44px;left:52px;right:52px;display:flex;align-items:center;justify-content:space-between;z-index:3;">' +
+                                '<div style="background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);color:#fff;font-family:Inter,sans-serif;font-size:13px;font-weight:700;padding:8px 20px;border-radius:24px;border:1px solid rgba(255,255,255,0.18);letter-spacing:1.5px;">📸 PHOTO REPORT</div>' +
+                                metaDateHtml(opts, false) +
+                            '</div>' +
+                        '</div>' +
+                        /* Bottom sliced content box (58% height) — taller for title below image */
+                        '<div style="position:absolute;bottom:0;left:0;width:100%;height:58%;background:#0d0d17;color:#fff;padding:64px 60px 24px;clip-path:polygon(0 16%, 100% 0, 100% 100%, 0 100%);display:flex;flex-direction:column;justify-content:space-between;z-index:2;border-top:3px solid ' + ac + ';">' +
+                            '<div style="position:absolute;inset:0;background-image:' + TEXTURES.gridDark + ';opacity:0.6;pointer-events:none;"></div>' +
+                            '<div style="position:relative;z-index:3;margin-top:28px;">' +
+                                '<div style="width:50px;height:4px;background:' + ac + ';border-radius:2px;margin-bottom:14px;"></div>' +
+                                '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:44px;font-weight:700;line-height:1.25;color:#ffffff;margin-bottom:12px;word-break:break-word;">' + processInline(headline) + '</div>' +
+                                '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-size:23px;line-height:1.6;color:rgba(255,255,255,0.85);max-height:200px;overflow:hidden;">' +
+                                    bodyHtml +
+                                '</div>' +
+                            '</div>' +
+                            '<div style="position:relative;z-index:3;">' + footerHtml('footer-on-dark', opts) + '</div>' +
+                        '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* 14. COLOR BLOCK */
+            {
+                id: 'colorblock',
+                name: 'Color Block',
+                nameBn: 'কালার ব্লক',
+                icon: '🟦',
+                generate: function(headline, bodyHtml, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var lenClass = getTextLengthClass(headline + bodyHtml);
+                    var hasBg = useBg && opts.bgImage;
+                    var topBg = hasBg
+                        ? 'background-image:linear-gradient(135deg, ' + hexToRgba(ac, 0.88) + ', ' + hexToRgba(ac, 0.96) + '), url(' + opts.bgImage + ');background-size:cover;background-position:center;'
+                        : 'background:' + ac + ';';
+
+                    return '<div class="card-canvas ' + lenClass + '" id="card-colorblock" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#ffffff;position:relative;overflow:hidden;">' +
+                        /* Top Block (65%) */
+                        '<div style="height:65%;' + topBg + 'color:#ffffff;padding:56px 64px 44px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;z-index:2;">' +
+                            '<div style="position:absolute;inset:0;background-image:' + TEXTURES.diagDark + ';pointer-events:none;opacity:0.7;"></div>' +
+                            /* Geometric Ring Decorative Elements */
+                            '<div style="position:absolute;bottom:-80px;right:-80px;width:320px;height:320px;border:3px solid rgba(255,255,255,0.2);border-radius:50%;pointer-events:none;"></div>' +
+                            '<div style="position:absolute;top:-40px;right:120px;width:180px;height:180px;border:2px dashed rgba(255,255,255,0.18);border-radius:50%;pointer-events:none;"></div>' +
+                            '<div style="display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3;">' +
+                                '<div style="font-family:Inter,sans-serif;font-size:14px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.85);background:rgba(0,0,0,0.2);padding:6px 16px;border-radius:20px;">TOP STORY · প্রধান খবর</div>' +
+                                '<div style="color:rgba(255,255,255,0.9);font-size:15px;font-family:\'Hind Siliguri\',sans-serif;">' + (opts.date ? '📅 ' + opts.date : '') + (opts.time ? ' • ⏰ ' + opts.time : '') + '</div>' +
+                            '</div>' +
+                            '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:52px;font-weight:800;line-height:1.2;color:#ffffff;position:relative;z-index:3;word-break:break-word;text-shadow:0 2px 12px rgba(0,0,0,0.15);">' +
+                                processInline(headline) +
+                            '</div>' +
+                            '<div style="display:flex;align-items:center;gap:10px;position:relative;z-index:3;">' +
+                                '<div style="width:40px;height:4px;background:#ffffff;border-radius:2px;"></div>' +
+                                '<div style="font-size:13px;font-family:Inter,sans-serif;letter-spacing:1px;font-weight:700;color:rgba(255,255,255,0.85);text-transform:uppercase;">OFFICIAL BRIEF</div>' +
+                            '</div>' +
+                        '</div>' +
+                        /* Bottom Block (35%) */
+                        '<div style="height:35%;background:#ffffff;padding:32px 64px;display:flex;align-items:center;justify-content:space-between;gap:36px;position:relative;z-index:3;">' +
+                            '<div style="flex:1;display:flex;flex-direction:column;justify-content:center;height:100%;">' +
+                                '<div class="card-content-area" style="font-family:\'Hind Siliguri\',sans-serif;font-size:24px;line-height:1.6;color:#333346;max-height:140px;overflow:hidden;margin-bottom:16px;">' +
+                                    bodyHtml +
+                                '</div>' +
+                                '<div style="display:flex;align-items:center;gap:14px;">' +
+                                    '<img src="' + (opts.logoSrc || state.logoDataUrl || './bongo-shomachar.jpeg') + '" style="width:38px;height:38px;border-radius:50%;object-fit:cover;border:1px solid #e2e8f0;" crossorigin="anonymous" />' +
+                                    '<div>' +
+                                        '<span style="font-family:\'Hind Siliguri\',sans-serif;font-size:18px;font-weight:700;color:#1a1a2e;display:block;line-height:1.2;">' + opts.brandName + '</span>' +
+                                        '<span style="font-family:\'Hind Siliguri\',sans-serif;font-size:12px;color:#6b7280;display:block;line-height:1.2;">' + opts.motto + '</span>' +
+                                    '</div>' +
+                                    (opts.source ? '<span class="fl-source-badge" style="font-size:13px;padding:3px 12px;background:#f3f4f6;color:#4b5563;">📌 ' + opts.source + '</span>' : '') +
+                                '</div>' +
+                            '</div>' +
+                            '<div style="width:64px;height:64px;border:2.5px solid #1a1a2e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#1a1a2e;flex-shrink:0;box-shadow:0 4px 14px rgba(0,0,0,0.06);">' +
+                                '→' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+                }
             }
         ];
 
         /* ═══════════════════════════════════════════════
-           INFOGRAPHIC CARD TEMPLATES (6 Variations)
+           INFOGRAPHIC CARD TEMPLATES (10 Variations)
            ═══════════════════════════════════════════════ */
         function renderTableHtml(data, theme, ac) {
             if (!data || !data.headers || !data.headers.length) return '';
@@ -2461,6 +2713,278 @@
                         '<div style="position:relative;z-index:3;">' + footerHtml('footer-on-light', opts) + '</div>' +
                     '</div>';
                 }
+            },
+
+            /* 7. TIMELINE FLOW */
+            {
+                id: 'info-timeline-flow',
+                name: 'Timeline Flow',
+                nameBn: 'টাইমলাইন ফ্লো',
+                icon: '⏳',
+                generate: function(headline, subtitle, tableData, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? bgImageLayer(opts.bgImage, 'background:linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.97))')
+                        : '';
+
+                    var rows = (tableData && tableData.rows) ? tableData.rows : [];
+                    var count = rows.length || 1;
+                    var gap = count <= 3 ? '24px' : (count <= 5 ? '16px' : '10px');
+                    var pad = count <= 3 ? '20px 24px' : (count <= 5 ? '14px 20px' : '10px 16px');
+
+                    var itemsHtml = '<div style="position:relative;display:flex;flex-direction:column;gap:' + gap + ';width:100%;">';
+                    /* Continuous connector line */
+                    itemsHtml += '<div style="position:absolute;left:27px;top:28px;bottom:28px;width:3px;background:linear-gradient(180deg, ' + ac + ' 0%, #cbd5e1 100%);border-radius:2px;z-index:1;"></div>';
+
+                    rows.forEach(function(r, idx) {
+                        var title = r[0] || '';
+                        var val1 = r[1] || '';
+                        var val2 = r[2] || '';
+                        var isHigh = tableData.highlights && tableData.highlights[idx];
+
+                        var cardStyle = isHigh
+                            ? 'background:linear-gradient(90deg, ' + hexToRgba(ac, 0.12) + ', #ffffff);border:2px solid ' + ac + ';box-shadow:0 6px 20px ' + hexToRgba(ac, 0.15) + ';'
+                            : 'background:#ffffff;border:1px solid #e5e7eb;box-shadow:0 3px 12px rgba(0,0,0,0.04);';
+
+                        itemsHtml += '<div style="display:flex;align-items:center;gap:20px;position:relative;z-index:2;">' +
+                            '<div style="width:56px;height:56px;background:' + (isHigh ? ac : '#111827') + ';color:#ffffff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;flex-shrink:0;box-shadow:0 4px 14px ' + (isHigh ? hexToRgba(ac, 0.4) : 'rgba(0,0,0,0.2)') + ';">' +
+                                (isHigh ? '★' : ('0' + (idx + 1)).slice(-2)) +
+                            '</div>' +
+                            '<div style="flex:1;' + cardStyle + 'border-radius:12px;padding:' + pad + ';">' +
+                                '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:24px;font-weight:700;color:#111827;line-height:1.25;">' + title + (isHigh ? ' <span style="font-size:13px;color:' + ac + ';font-weight:600;">(গুরুত্বপূর্ণ)</span>' : '') + '</div>' +
+                                (val1 ? '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:18px;color:#4b5563;margin-top:4px;line-height:1.4;">' + val1 + (val2 ? ' • ' + val2 : '') + '</div>' : '') +
+                            '</div>' +
+                        '</div>';
+                    });
+                    itemsHtml += '</div>';
+
+                    return '<div class="card-canvas" id="card-info-timeline-flow" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#f8fafc;position:relative;overflow:hidden;">' +
+                        bgLayers +
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.dots + ';z-index:2;pointer-events:none;"></div>' +
+                        '<div style="padding:44px 60px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3;">' +
+                            '<div style="display:inline-flex;align-items:center;gap:8px;background:' + hexToRgba(ac, 0.12) + ';color:' + ac + ';font-size:15px;font-weight:700;padding:6px 18px;border-radius:20px;">' +
+                                '⏳ পর্যায়ক্রমিক ফ্লো · TIMELINE FLOW' +
+                            '</div>' +
+                            metaDateHtml(opts, true) +
+                        '</div>' +
+                        '<div style="padding:24px 60px 0;position:relative;z-index:3;flex-shrink:0;">' +
+                            '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:44px;line-height:1.3;color:#111827;">' + processInline(headline) + '</div>' +
+                            (subtitle ? '<div style="font-size:22px;color:#64748b;margin-top:4px;">' + processInline(subtitle) + '</div>' : '') +
+                        '</div>' +
+                        '<div style="flex:1;padding:24px 60px 20px;overflow:hidden;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:3;">' +
+                            itemsHtml +
+                        '</div>' +
+                        '<div style="position:relative;z-index:3;">' + footerHtml('footer-on-light', opts) + '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* 8. RADIAL HUB */
+            {
+                id: 'info-radial-hub',
+                name: 'Radial Hub',
+                nameBn: 'রেডিয়াল হাব',
+                icon: '🎯',
+                generate: function(headline, subtitle, tableData, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? bgImageLayer(opts.bgImage, 'background:linear-gradient(180deg, rgba(248,250,252,0.92), rgba(248,250,252,0.97))')
+                        : '';
+
+                    var rows = (tableData && tableData.rows) ? tableData.rows : [];
+                    var r0 = rows[0] || ['আইটেম ১', '', ''];
+                    var r1 = rows[1] || ['আইটেম ২', '', ''];
+                    var r2 = rows[2] || ['আইটেম ৩', '', ''];
+                    var r3 = rows[3] || ['আইটেম ৪', '', ''];
+
+                    function renderSatellite(r, idx, posStyle) {
+                        var title = r[0] || '';
+                        var val1 = r[1] || '';
+                        var val2 = r[2] || '';
+                        var isHigh = tableData.highlights && tableData.highlights[idx];
+                        var cardBorder = isHigh ? 'border:2px solid ' + ac + ';box-shadow:0 8px 24px ' + hexToRgba(ac, 0.2) + ';' : 'border:1px solid #e2e8f0;box-shadow:0 4px 16px rgba(0,0,0,0.06);';
+
+                        return '<div style="position:absolute;' + posStyle + 'background:#ffffff;border-radius:14px;padding:16px 22px;min-width:240px;max-width:290px;' + cardBorder + 'z-index:3;display:flex;flex-direction:column;">' +
+                            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">' +
+                                '<div style="width:24px;height:24px;background:' + (isHigh ? ac : '#1e293b') + ';color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">' + (idx + 1) + '</div>' +
+                                '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:20px;font-weight:700;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + title + '</div>' +
+                            '</div>' +
+                            (val1 ? '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:17px;font-weight:600;color:' + ac + ';margin-top:2px;">' + val1 + '</div>' : '') +
+                            (val2 ? '<div style="font-size:14px;color:#64748b;margin-top:2px;">' + val2 + '</div>' : '') +
+                        '</div>';
+                    }
+
+                    return '<div class="card-canvas" id="card-info-radial-hub" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#f8fafc;position:relative;overflow:hidden;">' +
+                        bgLayers +
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.grid + ';z-index:2;pointer-events:none;"></div>' +
+                        '<div style="padding:44px 60px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3;">' +
+                            '<div style="display:inline-flex;align-items:center;gap:8px;background:' + hexToRgba(ac, 0.12) + ';color:' + ac + ';font-size:15px;font-weight:700;padding:6px 18px;border-radius:20px;">' +
+                                '🎯 রেডিয়াল হাব · RADIAL FRAMEWORK' +
+                            '</div>' +
+                            metaDateHtml(opts, true) +
+                        '</div>' +
+                        '<div style="padding:20px 60px 0;position:relative;z-index:3;flex-shrink:0;text-align:center;">' +
+                            '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:42px;line-height:1.25;color:#0f172a;">' + processInline(headline) + '</div>' +
+                            (subtitle ? '<div style="font-size:20px;color:#64748b;margin-top:4px;">' + processInline(subtitle) + '</div>' : '') +
+                        '</div>' +
+                        /* Central Hub & Crosshairs */
+                        '<div style="flex:1;margin:10px 60px;position:relative;display:flex;align-items:center;justify-content:center;z-index:3;">' +
+                            /* Crosshairs lines */
+                            '<div style="position:absolute;top:50%;left:40px;right:40px;height:2px;background:linear-gradient(90deg, transparent, ' + hexToRgba(ac, 0.4) + ', transparent);transform:translateY(-50%);z-index:1;"></div>' +
+                            '<div style="position:absolute;left:50%;top:20px;bottom:20px;width:2px;background:linear-gradient(180deg, transparent, ' + hexToRgba(ac, 0.4) + ', transparent);transform:translateX(-50%);z-index:1;"></div>' +
+                            /* Center Core Sphere */
+                            '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:210px;height:210px;background:#0f172a;color:#ffffff;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;z-index:4;border:4px solid ' + ac + ';box-shadow:0 10px 35px rgba(0,0,0,0.25);">' +
+                                '<div style="font-family:Inter,sans-serif;font-size:12px;font-weight:800;letter-spacing:1.5px;color:' + ac + ';text-transform:uppercase;margin-bottom:4px;">CORE HUB</div>' +
+                                '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:22px;font-weight:700;line-height:1.25;">' + (headline.length > 22 ? headline.substring(0, 22) + '...' : headline) + '</div>' +
+                            '</div>' +
+                            /* 4 Satellites */
+                            renderSatellite(r0, 0, 'top:10px;left:50%;transform:translateX(-50%);') +
+                            renderSatellite(r1, 1, 'top:50%;right:20px;transform:translateY(-50%);') +
+                            renderSatellite(r2, 2, 'bottom:10px;left:50%;transform:translateX(-50%);') +
+                            renderSatellite(r3, 3, 'top:50%;left:20px;transform:translateY(-50%);') +
+                        '</div>' +
+                        '<div style="position:relative;z-index:3;">' + footerHtml('footer-on-light', opts) + '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* 9. STACKED CARDS */
+            {
+                id: 'info-stacked',
+                name: 'Stacked Cards',
+                nameBn: 'স্ট্যাকড কার্ড',
+                icon: '🃏',
+                generate: function(headline, subtitle, tableData, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? bgImageLayer(opts.bgImage, 'background:linear-gradient(160deg, rgba(13,13,22,0.9), rgba(13,13,22,0.96))')
+                        : '';
+
+                    var rows = (tableData && tableData.rows) ? tableData.rows : [];
+                    var count = rows.length || 1;
+                    var gap = count <= 3 ? '20px' : (count <= 5 ? '14px' : '10px');
+
+                    var cardsHtml = '<div style="display:flex;flex-direction:column;gap:' + gap + ';width:100%;max-width:980px;margin:0 auto;">';
+
+                    rows.forEach(function(r, idx) {
+                        var title = r[0] || '';
+                        var val1 = r[1] || '';
+                        var val2 = r[2] || '';
+                        var isHigh = tableData.highlights && tableData.highlights[idx];
+
+                        /* Progressive depth translation */
+                        var xOffset = Math.min(idx * 24, 72);
+                        var opacity = 1 - (idx * 0.05);
+
+                        var cardStyle = isHigh
+                            ? 'background:linear-gradient(90deg, #ffffff, ' + hexToRgba(ac, 0.08) + ');border:2px solid ' + ac + ';box-shadow:0 8px 30px ' + hexToRgba(ac, 0.3) + ';'
+                            : 'background:#ffffff;border:1px solid rgba(255,255,255,0.2);box-shadow:0 6px 20px rgba(0,0,0,0.3);';
+
+                        cardsHtml += '<div style="transform:translateX(' + xOffset + 'px);opacity:' + opacity + ';' + cardStyle + 'border-radius:14px;padding:18px 26px;display:flex;align-items:center;justify-content:space-between;gap:20px;transition:all 0.2s;">' +
+                            '<div style="display:flex;align-items:center;gap:16px;flex:1;min-width:0;">' +
+                                '<div style="width:36px;height:36px;background:' + (isHigh ? ac : '#10b981') + ';color:#ffffff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;flex-shrink:0;">' +
+                                    (isHigh ? '★' : '✓') +
+                                '</div>' +
+                                '<div style="flex:1;min-width:0;">' +
+                                    '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:24px;font-weight:700;color:#0f172a;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + title + '</div>' +
+                                    (val1 ? '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:17px;color:#475569;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + val1 + '</div>' : '') +
+                                '</div>' +
+                            '</div>' +
+                            (val2 ? '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:18px;font-weight:700;color:' + ac + ';background:rgba(0,0,0,0.04);padding:6px 14px;border-radius:8px;flex-shrink:0;">' + val2 + '</div>' : '') +
+                        '</div>';
+                    });
+                    cardsHtml += '</div>';
+
+                    return '<div class="card-canvas" id="card-info-stacked" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#0b0b14;position:relative;overflow:hidden;">' +
+                        bgLayers +
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.diagDark + ';z-index:2;pointer-events:none;"></div>' +
+                        '<div style="padding:44px 60px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3;">' +
+                            '<div style="display:inline-flex;align-items:center;gap:8px;background:' + ac + ';color:#ffffff;font-size:14px;font-weight:700;padding:6px 18px;border-radius:6px;letter-spacing:1px;text-transform:uppercase;">' +
+                                'DEPTH STACK · স্ট্যাকড লিস্ট' +
+                            '</div>' +
+                            metaDateHtml(opts, false) +
+                        '</div>' +
+                        '<div style="padding:24px 60px 0;position:relative;z-index:3;flex-shrink:0;">' +
+                            '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:44px;line-height:1.3;color:#ffffff;">' + processInline(headline) + '</div>' +
+                            (subtitle ? '<div style="font-size:22px;color:rgba(255,255,255,0.65);margin-top:4px;">' + processInline(subtitle) + '</div>' : '') +
+                        '</div>' +
+                        '<div style="flex:1;padding:24px 60px 20px;overflow:hidden;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:3;">' +
+                            cardsHtml +
+                        '</div>' +
+                        '<div style="position:relative;z-index:3;">' + footerHtml('footer-on-dark', opts) + '</div>' +
+                    '</div>';
+                }
+            },
+
+            /* 10. PATH JOURNEY / ROADMAP */
+            {
+                id: 'info-path-journey',
+                name: 'Path Journey',
+                nameBn: 'মাইলস্টোন রোডম্যাপ',
+                icon: '🛣️',
+                generate: function(headline, subtitle, tableData, opts, useBg) {
+                    var ac = opts.accentColor;
+                    var bgLayers = useBg && opts.bgImage
+                        ? bgImageLayer(opts.bgImage, 'background:linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.97))')
+                        : '';
+
+                    var rows = (tableData && tableData.rows) ? tableData.rows : [];
+                    var count = Math.min(rows.length, 5) || 1;
+                    var progressWidth = count > 1 ? Math.round((2 / count) * 100) : 70;
+
+                    var stepsHtml = '<div style="position:relative;width:100%;margin-top:20px;">';
+                    /* Horizontal Path track bar */
+                    stepsHtml += '<div style="position:absolute;top:20px;left:60px;right:60px;height:6px;background:#e2e8f0;border-radius:3px;z-index:1;">' +
+                        '<div style="position:absolute;left:0;top:0;height:100%;width:' + progressWidth + '%;background:' + ac + ';border-radius:3px;"></div>' +
+                    '</div>';
+
+                    /* Steps nodes row */
+                    stepsHtml += '<div style="display:flex;justify-content:space-between;position:relative;z-index:2;padding:0 20px;">';
+
+                    rows.slice(0, 5).forEach(function(r, idx) {
+                        var title = r[0] || '';
+                        var val1 = r[1] || '';
+                        var val2 = r[2] || '';
+                        var isHigh = tableData.highlights && tableData.highlights[idx];
+
+                        var isPassed = idx <= 1;
+                        var dotBg = isHigh ? ac : (isPassed ? '#0f172a' : '#ffffff');
+                        var dotBorder = isHigh ? ac : (isPassed ? '#0f172a' : '#cbd5e1');
+                        var dotColor = isPassed || isHigh ? '#ffffff' : '#64748b';
+
+                        stepsHtml += '<div style="display:flex;flex-direction:column;align-items:center;text-align:center;width:' + Math.round(100 / count) + '%;max-width:200px;">' +
+                            '<div style="width:42px;height:42px;background:' + dotBg + ';color:' + dotColor + ';border-radius:50%;margin-bottom:16px;border:4px solid #ffffff;box-shadow:0 0 0 3px ' + dotBorder + ';display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;">' +
+                                (isHigh ? '★' : toBanglaNumber(idx + 1)) +
+                            '</div>' +
+                            '<div style="background:#ffffff;border:1px solid ' + (isHigh ? ac : '#e2e8f0') + ';border-radius:12px;padding:14px 12px;width:100%;box-shadow:0 4px 14px rgba(0,0,0,0.05);">' +
+                                '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:18px;font-weight:700;color:#0f172a;line-height:1.25;margin-bottom:4px;">' + title + '</div>' +
+                                (val1 ? '<div style="font-family:\'Hind Siliguri\',sans-serif;font-size:15px;color:' + ac + ';font-weight:600;">' + val1 + '</div>' : '') +
+                                (val2 ? '<div style="font-size:13px;color:#64748b;margin-top:2px;">' + val2 + '</div>' : '') +
+                            '</div>' +
+                        '</div>';
+                    });
+
+                    stepsHtml += '</div></div>';
+
+                    return '<div class="card-canvas" id="card-info-path-journey" style="width:1200px;height:1200px;display:flex;flex-direction:column;background:#f8fafc;position:relative;overflow:hidden;">' +
+                        bgLayers +
+                        '<div style="position:absolute;inset:0;background-image:' + TEXTURES.grid + ';z-index:2;pointer-events:none;"></div>' +
+                        '<div style="padding:44px 60px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3;">' +
+                            '<div style="display:inline-flex;align-items:center;gap:8px;background:' + hexToRgba(ac, 0.12) + ';color:' + ac + ';font-size:15px;font-weight:700;padding:6px 18px;border-radius:20px;">' +
+                                '🛣️ মাইলস্টোন ও অগ্রগতি · PATH JOURNEY' +
+                            '</div>' +
+                            metaDateHtml(opts, true) +
+                        '</div>' +
+                        '<div style="padding:24px 60px 0;position:relative;z-index:3;flex-shrink:0;">' +
+                            '<div style="font-family:\'Hind Siliguri\',sans-serif;font-weight:700;font-size:44px;line-height:1.3;color:#0f172a;">' + processInline(headline) + '</div>' +
+                            (subtitle ? '<div style="font-size:22px;color:#64748b;margin-top:4px;">' + processInline(subtitle) + '</div>' : '') +
+                        '</div>' +
+                        '<div style="flex:1;padding:24px 60px 20px;overflow:hidden;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:3;">' +
+                            stepsHtml +
+                        '</div>' +
+                        '<div style="position:relative;z-index:3;">' + footerHtml('footer-on-light', opts) + '</div>' +
+                    '</div>';
+                }
             }
         ];
 
@@ -2552,7 +3076,12 @@
                                 (hasBg ? '<label class="img-toggle"><input type="checkbox" ' + (useBg ? 'checked' : '') + ' onchange="toggleCardImage(\'' + tmpl.id + '\', this.checked)"> BG</label>' : '') +
                                 '<button class="btn-download-single" onclick="downloadCard(\'' + tmpl.id + '\', event)">⬇ JPG</button>' +
                             '</div>' +
-                        '</div>';
+                        '</div>' +
+                        (hasBg ? '<div class="bg-opacity-row" id="opacity-row-' + tmpl.id + '">' +
+                            '<span class="opacity-label">🎨 Overlay</span>' +
+                            '<input type="range" min="0" max="100" value="100" oninput="adjustBgOpacity(\'' + tmpl.id + '\', this.value)" />' +
+                            '<span class="opacity-val">100%</span>' +
+                        '</div>' : '');
 
                     galleryGrid.appendChild(wrapper);
                 });
@@ -2616,6 +3145,26 @@
             }
         }
         window.toggleCardImage = toggleCardImage;
+
+        /* ═══════════════════════════════════════════════
+           BG OVERLAY OPACITY CONTROL
+           ═══════════════════════════════════════════════ */
+        function adjustBgOpacity(templateId, value) {
+            var wrapper = document.getElementById('wrapper-' + templateId);
+            if (!wrapper) return;
+            var overlays = wrapper.querySelectorAll('[data-bg-overlay]');
+            var pct = parseInt(value, 10);
+            overlays.forEach(function(el) {
+                el.style.opacity = pct / 100;
+            });
+            /* Update the percentage label */
+            var row = document.getElementById('opacity-row-' + templateId);
+            if (row) {
+                var valSpan = row.querySelector('.opacity-val');
+                if (valSpan) valSpan.textContent = pct + '%';
+            }
+        }
+        window.adjustBgOpacity = adjustBgOpacity;
 
         /* ═══════════════════════════════════════════════
            CARD SCALE MANAGEMENT
